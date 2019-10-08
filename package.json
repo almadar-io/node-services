@@ -20,7 +20,7 @@
   "dependencies": {
     "amazon-cognito-identity-js": "^3.0.15",
     "apollo-server-express": "^2.1.0",
-    "aws-sdk": "^2.403.0",
+    "aws-sdk": "^2.544.0",
     "bcrypt": "^3.0.1",
     "config": "^1.25.1",
     "csv-parser": "^2.3.0",

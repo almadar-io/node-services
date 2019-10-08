@@ -7,6 +7,7 @@ module.exports = function socketIO({
   onEvent,
   onUpdate,
   onDelete,
+  onInit,
   channel,
   port,
   server
@@ -22,6 +23,7 @@ module.exports = function socketIO({
   });
   ioServer.of(channel).on("connection", function(socket) {
     ioServer.emit("init", "connected");
+    onInit(ioServer);
     socket.on(channel, function(msg) {
       let eventData = msg;
       if (onEvent) {
