@@ -21,9 +21,10 @@ module.exports = function socketIO({
   apiRoutes.get("/", function(req, res) {
     res.send("Hello! this is socket service");
   });
-  ioServer.of(channel).on("connection", function(socket) {
+  const namespace = ioServer.of(channel);
+  namespace.on("connection", function(socket) {
     ioServer.emit("init", "connected");
-    onInit(ioServer);
+    onInit(namespace, socket);
     socket.on(channel, function(msg) {
       let eventData = msg;
       if (onEvent) {

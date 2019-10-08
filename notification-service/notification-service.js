@@ -14,11 +14,11 @@ module.exports.notificationService = function({ modelName, server, config }) {
       },
       onUpdate: () => {},
       onDelete: () => {},
-      onInit: socket => {
-        resolve(socket);
+      onInit: (io, socket) => {
+        resolve({ io, socket });
       },
       config,
-      channel: "/",
+      channel: `/${modelName}`,
       port: "5000",
       server
     });
