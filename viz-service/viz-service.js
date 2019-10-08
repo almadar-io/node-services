@@ -61,7 +61,7 @@ module.exports = function({
   };
 
   apiRoutes.get("/count", function(req, res) {
-    let { criteria } = executeDomain(req, res, require(count));
+    let { criteria } = executeDomain(req, res, count);
     Model.count(criteria).exec((err, data) => {
       if (err) {
         console.log(err);
@@ -72,7 +72,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/count/time/:period", (req, res) => {
-    let { criteria } = executeDomain(req, res, require(count));
+    let { criteria } = executeDomain(req, res, count);
     let { period } = require(req.params);
     let onResponse = (err, data) => {
       if (err) {
@@ -84,7 +84,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/max/:field", function(req, res) {
-    let { criteria } = executeDomain(req, res, require(max));
+    let { criteria } = executeDomain(req, res, max);
     let field = req.params.field;
     Model.find(criteria)
       .sort([[field, -1]])
@@ -98,7 +98,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/max/:field/time/:period", (req, res) => {
-    let { criteria } = executeDomain(req, res, require(count));
+    let { criteria } = executeDomain(req, res, count);
     let { period, field } = require(req.params);
     let onResponse = (err, data) => {
       if (err) {
@@ -110,7 +110,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/min/:field", function(req, res) {
-    let { criteria } = executeDomain(req, res, require(min));
+    let { criteria } = executeDomain(req, res, min);
     let field = req.params.field;
     Model.find(criteria)
       .sort([[field, 1]])
@@ -124,7 +124,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/min/:field/time/:period", (req, res) => {
-    let { criteria } = executeDomain(req, res, require(count));
+    let { criteria } = executeDomain(req, res, count);
     let { period, field } = require(req.params);
     let onResponse = (err, data) => {
       if (err) {
@@ -136,7 +136,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/sum/:field", function(req, res) {
-    let { criteria } = executeDomain(req, res, require(sum));
+    let { criteria } = executeDomain(req, res, sum);
     let field = req.params.field;
     Model.aggregate(
       [
@@ -158,7 +158,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/sum/:field/time/:period", (req, res) => {
-    let { criteria } = executeDomain(req, res, require(count));
+    let { criteria } = executeDomain(req, res, sum);
     let { period, field } = require(req.params);
     let onResponse = (err, data) => {
       if (err) {
@@ -192,7 +192,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/average/:field/time/:period", (req, res) => {
-    let { criteria } = executeDomain(req, res, require(count));
+    let { criteria } = executeDomain(req, res, count);
     let { period, field } = require(req.params);
     let onResponse = (err, data) => {
       if (err) {
@@ -204,7 +204,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/distinct/:field", function(req, res) {
-    let { criteria } = executeDomain(req, res, require(distinct));
+    let { criteria } = executeDomain(req, res, distinct);
     let field = req.params.field;
     Model.find(criteria).distinct(field, function(err, data) {
       if (err) {
@@ -219,7 +219,7 @@ module.exports = function({
   //field is the field you want to do the aggregation on
   //https://docs.mongodb.com/manual/reference/operator/aggregation/sum/#grp._S_sum
   apiRoutes.get("/aggregate/:op/:fn/:fields", (req, res) => {
-    let { criteria } = executeDomain(req, res, require(aggregate));
+    let { criteria } = executeDomain(req, res, aggregate);
     let $group = {};
     let fields;
     try {
