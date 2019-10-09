@@ -70,7 +70,7 @@ module.exports = function({
       res.status(200).send({ count: data });
     });
   });
-  
+
   apiRoutes.get("/count/time/:period", (req, res) => {
     let { criteria } = executeDomain(req, res, count);
     let { period } = req.params;
@@ -83,6 +83,7 @@ module.exports = function({
     aggregateOverTime(criteria, period, { $sum: 1 }, onResponse);
   });
 
+  //get the model with the max of a given field (:field)
   apiRoutes.get("/max/:field", function(req, res) {
     let { criteria } = executeDomain(req, res, max);
     let field = req.params.field;
@@ -140,7 +141,7 @@ module.exports = function({
     let field = req.params.field;
     Model.aggregate(
       [
-        { $match: criteria },
+        { $match: {criteria} },
         {
           $group: {
             _id: {},
