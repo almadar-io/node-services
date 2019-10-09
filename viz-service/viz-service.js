@@ -58,6 +58,9 @@ module.exports = function({
         onResponse
       );
     }
+    else{
+    onResponse("period not supported, please select either yearly, monthly or daily");
+    }
   };
 
   apiRoutes.get("/count", function(req, res) {
