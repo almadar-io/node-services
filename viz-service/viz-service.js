@@ -12,7 +12,7 @@ module.exports = function({
     if (period === "daily") {
       Model.aggregate(
         [
-          { $match: criteria },
+          { $match: { criteria } },
           {
             $group: {
               _id: {
@@ -29,7 +29,7 @@ module.exports = function({
     } else if (period === "monthly") {
       Model.aggregate(
         [
-          { $match: criteria },
+          { $match: { criteria } },
           {
             $group: {
               _id: {
@@ -45,7 +45,7 @@ module.exports = function({
     } else if (period === "yearly") {
       Model.aggregate(
         [
-          { $match: criteria },
+          { $match: { criteria } },
           {
             $group: {
               _id: {
@@ -59,8 +59,9 @@ module.exports = function({
       );
     }
     else{
-    onResponse("period not supported, please select either yearly, monthly or daily");
+      onResponse("period not supported, please choose yearly, monthly or daily for the period");
     }
+    
   };
 
   apiRoutes.get("/count", function(req, res) {
@@ -178,7 +179,7 @@ module.exports = function({
     let field = req.params.field;
     Model.aggregate(
       [
-        { $match: criteria },
+        { $match: { criteria } },
         {
           $group: {
             _id: {},
@@ -242,7 +243,7 @@ module.exports = function({
 
     let groupQuery = { $group };
 
-    Model.aggregate([{ $match: criteria }, groupQuery], (err, data) => {
+    Model.aggregate([{ $match: { criteria } }, groupQuery], (err, data) => {
       if (err) {
         return res.status(500).send(err);
       }
