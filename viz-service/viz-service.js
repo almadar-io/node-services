@@ -70,10 +70,10 @@ module.exports = function({
       res.status(200).send({ count: data });
     });
   });
-
+  
   apiRoutes.get("/count/time/:period", (req, res) => {
     let { criteria } = executeDomain(req, res, count);
-    let { period } = require(req.params);
+    let { period } = req.params;
     let onResponse = (err, data) => {
       if (err) {
         return res.status(500).send(err);
@@ -99,7 +99,7 @@ module.exports = function({
 
   apiRoutes.get("/max/:field/time/:period", (req, res) => {
     let { criteria } = executeDomain(req, res, count);
-    let { period, field } = require(req.params);
+    let { period, field } = req.params;
     let onResponse = (err, data) => {
       if (err) {
         return res.status(500).send(err);
@@ -125,7 +125,7 @@ module.exports = function({
 
   apiRoutes.get("/min/:field/time/:period", (req, res) => {
     let { criteria } = executeDomain(req, res, count);
-    let { period, field } = require(req.params);
+    let { period, field } = req.params;
     let onResponse = (err, data) => {
       if (err) {
         return res.status(500).send(err);
@@ -159,7 +159,7 @@ module.exports = function({
 
   apiRoutes.get("/sum/:field/time/:period", (req, res) => {
     let { criteria } = executeDomain(req, res, sum);
-    let { period, field } = require(req.params);
+    let { period, field } = req.params;
     let onResponse = (err, data) => {
       if (err) {
         return res.status(500).send(err);
@@ -170,7 +170,7 @@ module.exports = function({
   });
 
   apiRoutes.get("/average/:field", function(req, res) {
-    let { criteria } = executeDomain(req, res, require(average));
+    let { criteria } = executeDomain(req, res, average);
     let field = req.params.field;
     Model.aggregate(
       [
@@ -193,7 +193,7 @@ module.exports = function({
 
   apiRoutes.get("/average/:field/time/:period", (req, res) => {
     let { criteria } = executeDomain(req, res, count);
-    let { period, field } = require(req.params);
+    let { period, field } = req.params;
     let onResponse = (err, data) => {
       if (err) {
         return res.status(500).send(err);
