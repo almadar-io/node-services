@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/itechdom/playground.git"
+    "url": "git+https://github.com/markab-io/node-services.git"
   },
   "author": "sam alghanmi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/itechdom/playground/issues"
+    "url": "https://github.com/markab-io/node-services/issues"
   },
-  "homepage": "https://github.com/itechdom/playground#readme",
+  "homepage": "https://github.com/markab-io/node-services#readme",
   "dependencies": {
     "amazon-cognito-identity-js": "^3.0.15",
     "apollo-server-express": "^2.1.0",
