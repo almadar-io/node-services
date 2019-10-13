@@ -57,11 +57,11 @@ module.exports = function({
         ],
         onResponse
       );
+    } else {
+      onResponse(
+        "period not supported, please choose yearly, monthly or daily for the period"
+      );
     }
-    else{
-      onResponse("period not supported, please choose yearly, monthly or daily for the period");
-    }
-    
   };
 
   apiRoutes.get("/count", function(req, res) {
@@ -73,6 +73,37 @@ module.exports = function({
       }
       res.status(200).send({ count: data });
     });
+  });
+
+  //count a field only, let's say you have a sub field ... like comments on a blog, how do you count them?
+  apiRoutes.get("/count/:field", function(req, res) {
+    const subField = req.params.field;
+    Model.aggregate(
+      [
+        {
+          $unwind: `$${subField}`
+        },
+        {
+          $group: {
+            _id: `$${subField}`,
+            total: {
+              $sum: 1
+            }
+          }
+        },
+        {
+          $sort: {
+            total: -1
+          }
+        }
+      ],
+      (err, data) => {
+        if (err) {
+          return res.status(500).send(err);
+        }
+        return res.send({ res: data });
+      }
+    );
   });
 
   apiRoutes.get("/count/time/:period", (req, res) => {
@@ -87,6 +118,8 @@ module.exports = function({
     aggregateOverTime(criteria, period, { $sum: 1 }, onResponse);
   });
 
+  apiRoutes.get("/count/:field/time/:period", function(req, res) {});
+
   //get the model with the max of a given field (:field)
   apiRoutes.get("/max/:field", function(req, res) {
     let { criteria } = executeDomain(req, res, max);
@@ -98,7 +131,7 @@ module.exports = function({
           console.log("err", err);
           return res.status(500).send(err);
         }
-        res.status(200).send({ max: data[0][`${field}`], data: data });
+        res.status(200).send({ max: data[0][`${field}`], data: data[0] });
       });
   });
 
@@ -124,7 +157,7 @@ module.exports = function({
           console.log(err);
           return res.setStatus(500).send(err);
         }
-        res.status(200).send({ min: data[0][`${field}`], data: data });
+        res.status(200).send({ min: data[0][`${field}`], data: data[0] });
       });
   });
 
@@ -145,7 +178,7 @@ module.exports = function({
     let field = req.params.field;
     Model.aggregate(
       [
-        { $match: {criteria} },
+        { $match: { criteria } },
         {
           $group: {
             _id: {},
