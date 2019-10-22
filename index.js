@@ -10,6 +10,7 @@ const jobService = require("./job-service/job-service");
 const jwtService = require("./jwt-service/jwt-service");
 const lambdaService = require("./lambda-service/lambda-service");
 const passportService = require("./passport-service/passport-service");
+const notificationService = require("./notification-service/notification-service");
 const vizService = require("./viz-service/viz-service");
 const emailService = require("./email-service/email-service");
 
