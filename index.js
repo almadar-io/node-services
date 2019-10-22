@@ -28,7 +28,8 @@ const exported = {
   lambdaService,
   passportService,
   vizService,
-  emailService
+  emailService,
+  notificationService
 };
 
 module.exports = exported;
