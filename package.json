@@ -1,6 +1,6 @@
 {
   "name": "@markab.io/node",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "A way to get up and running quickly with any programming task.",
   "main": "index.js",
   "scripts": {
