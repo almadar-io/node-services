@@ -43,7 +43,7 @@ const setForms = (lookUpKey, fields, formsModel) => {
       if (err) {
         console.error(err);
       }
-      console.log("forms set!");
+      console.info("forms set!");
     }
   );
 };

@@ -27,7 +27,7 @@ const setPermissions = (permissionsModel, lookUpKey) => {
       if (err) {
         console.error(err);
       }
-      console.log("permissions set!");
+      console.info("permissions set!");
     }
   );
 };

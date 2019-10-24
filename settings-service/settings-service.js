@@ -43,7 +43,7 @@ const setSettings = (lookUpKey, fields, settingsModel) => {
       if (err) {
         console.error(err);
       }
-      console.log("settings set!");
+      console.info("settings set!");
     }
   );
 };

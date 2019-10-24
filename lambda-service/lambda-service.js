@@ -13,7 +13,7 @@ module.exports.registerLambdaFunction = function registerLambdaFunction({
         if (err) {
           console.error(err);
         }
-        console.log("lambda set!");
+        console.info("lambda set!");
       }
     );
   });
