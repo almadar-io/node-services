@@ -5,6 +5,7 @@ const mediaService = require("./media-service/media-service");
 const formsService = require("./forms-service/forms-service");
 const aclService = require("./acl-service/acl-service");
 const helloService = require("./hello-service/hello-service");
+const settingsService = require("./settings-service/settings-service");
 const i18nService = require("./i18n-service/i18n-service");
 const jobService = require("./job-service/job-service");
 const jwtService = require("./jwt-service/jwt-service");
@@ -29,7 +30,8 @@ const exported = {
   passportService,
   vizService,
   emailService,
-  notificationService
+  notificationService,
+  settingsService
 };
 
 module.exports = exported;
