@@ -3,7 +3,7 @@ const express = require("express");
 
 const apiRoutes = express.Router();
 
-module.exports.sendEmail = async (from, to, template) => {
+const sendEmail = async(from, to, template) => {
   // Generate test SMTP service account = ethereal.email
   // Only needed if you don't have a real mail account for testing
   let account = await nodemailer.createTestAccount();
@@ -21,9 +21,9 @@ module.exports.sendEmail = async (from, to, template) => {
 
   // setup email data with unicode symbols
   let mailOptions = {
-    from: `"Fred Foo 👻" <${from}>`, // sender address
+    from: `"From" <${from}>`, // sender address
     to: `${to}`, // list of receivers
-    subject: "Hello ✔", // Subject line
+    subject: "Welcome to worthmanifesto!", // Subject line
     text: `${template}`, // plain text body
     html: `<b>${template}</b>` // html body
   };
@@ -37,6 +37,7 @@ module.exports.sendEmail = async (from, to, template) => {
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 };
 
+module.exports.sendEmail = sendEmail;
 module.exports.emailServiceApi = apiRoutes.post("/email", (req, res) => {
   let { from, to, template } = require(req.body);
   sendEmail(from, to, template);
