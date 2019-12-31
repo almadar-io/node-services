@@ -61,8 +61,7 @@ const crudService = function({
     }
     let exclusionList = exclude && exclude.map(ex => `-${ex}`).join(" ");
     Model.paginate(
-      query,
-      {
+      query, {
         page,
         limit,
         select: exclusionList,
@@ -73,8 +72,9 @@ const crudService = function({
           return res.status(500).send(err);
         }
         onResponse
-          ? onResponse(data.docs, req, res)
-          : res.status(200).send(data.docs);
+          ?
+          onResponse(data.docs, req, res) :
+          res.status(200).send(data.docs);
       }
     );
   });
@@ -103,8 +103,9 @@ const crudService = function({
         return res.status(409).send({ message: err.message });
       }
       onResponse
-        ? onResponse(newModel, req, res)
-        : res.status(200).send(newModel);
+        ?
+        onResponse(newModel, req, res) :
+        res.status(200).send(newModel);
     });
   });
 
@@ -128,17 +129,16 @@ const crudService = function({
       }
     }
 
-    Model.findOneAndUpdate(
-      { _id: newModel._id, ...criteria },
-      newModel,
-      {
+    Model.findOneAndUpdate({ _id: newModel._id, ...criteria },
+      newModel, {
         upsert: false
       },
       function(err, doc) {
         if (err) return res.send(500, { error: err });
         onResponse
-          ? onResponse(newModel, req, res)
-          : res.status(200).send(newModel);
+          ?
+          onResponse(newModel, req, res) :
+          res.status(200).send(newModel);
       }
     );
   });
@@ -152,9 +152,9 @@ const crudService = function({
       });
     }
     Model.find({
-      _id: requestModelID,
-      ...criteria
-    })
+        _id: requestModelID,
+        ...criteria
+      })
       .remove()
       .exec(err => {
         if (err) {
@@ -166,7 +166,7 @@ const crudService = function({
 
   apiRoutes.post("/search", (req, res) => {
     let query = req.body.query;
-    let { criteria, isPermitted } = executeDomain(req, res, search);
+    let { criteria, isPermitted, onResponse } = executeDomain(req, res, search);
     if (!isPermitted) {
       return res.status(409).send({
         message: `You are not authorized to search ${Model.modelName}s`
@@ -176,7 +176,9 @@ const crudService = function({
       if (err) {
         return res.status(500).send(err);
       }
-      return res.status(200).send(results);
+      return onResponse ?
+        onResponse(results, req, res) :
+        res.status(200).send(results);
     });
   });
 
