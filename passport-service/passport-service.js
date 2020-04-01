@@ -49,28 +49,28 @@ module.exports = function({
   });
 
   apiRoutes.post("/auth/resend-email-confirmation", (req, res) => {
-    let { email } = req.body;
-    onResendEmailConfirmation({ email }, req, res);
+    let { email, callback } = req.body;
+    onResendEmailConfirmation({ email, callback }, req, res);
   });
 
   apiRoutes.get("/auth/email-confirmation", (req, res) => {
-    let { email, token } = req.query;
-    onEmailVerify({ email, token }, req, res);
+    let { email, token, callback } = req.query;
+    onEmailVerify({ email, token, callback }, req, res);
   });
 
   apiRoutes.post("/auth/change-password", (req, res) => {
-    let { token, email, newPassword } = req.body;
-    onPasswordChange({ token, email, newPassword }, req, res);
-  });
-
-  apiRoutes.get("/auth/forgot-password-confirm", (req, res) => {
-    let { token, email } = req.query;
-    onPasswordResetConfirm({ token, email }, req, res);
+    let { token, email, newPassword, callback } = req.body;
+    onPasswordChange({ token, email, newPassword, callback }, req, res);
   });
 
   apiRoutes.post("/auth/forgot-password", (req, res) => {
-    let { email } = req.body;
-    onPasswordReset({ email }, req, res);
+    let { email, callback } = req.body;
+    onPasswordReset({ email, callback }, req, res);
+  });
+
+  apiRoutes.get("/auth/forgot-password-confirm", (req, res) => {
+    let { token, email, callback } = req.query;
+    onPasswordResetConfirm({ token, email, callback }, req, res);
   });
 
   apiRoutes.post("/auth/register", (req, res) => {
