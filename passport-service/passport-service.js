@@ -53,8 +53,8 @@ module.exports = function({
     onResendEmailConfirmation({ email, callback }, req, res);
   });
 
-  apiRoutes.get("/auth/email-confirmation", (req, res) => {
-    let { email, token, callback } = req.query;
+  apiRoutes.post("/auth/email-confirmation", (req, res) => {
+    let { email, token, callback } = req.body;
     onEmailVerify({ email, token, callback }, req, res);
   });
 
