@@ -27,6 +27,7 @@ const crudService = function({
       });
     }
     let exclusionList = exclude && exclude.map(ex => `-${ex}`).join(" ");
+    console.log(query);
     Model.find(query)
       .sort("-createdAt")
       .populate((Array.isArray(populate) && populate.join(" ")) || "")
@@ -35,7 +36,7 @@ const crudService = function({
         if (err) {
           return res.status(500).send(err);
         }
-        onResponse ? onResponse(data, req, res) : res.status(200).send(data);
+        onResponse ? onResponse({ data: data, count: data.length }, req, res) : res.status(200).send({ data: data, count: data.length });
       });
   });
 
@@ -60,23 +61,26 @@ const crudService = function({
       });
     }
     let exclusionList = exclude && exclude.map(ex => `-${ex}`).join(" ");
-    Model.paginate(
-      query, {
-        page,
-        limit,
-        select: exclusionList,
-        sort: `-createdAt`
-      },
-      (err, data) => {
-        if (err) {
-          return res.status(500).send(err);
+    Model.count({}, function(err, count) {
+      if (err) { return res.status(500).send(err) }
+      Model.paginate(
+        query, {
+          page,
+          limit,
+          select: exclusionList,
+          sort: `-createdAt`
+        },
+        (err, data) => {
+          if (err) {
+            return res.status(500).send(err);
+          }
+          onResponse
+            ?
+            onResponse({ data: data.docs, count }, req, res) :
+            res.status(200).send({ data: data.docs, count });
         }
-        onResponse
-          ?
-          onResponse(data.docs, req, res) :
-          res.status(200).send(data.docs);
-      }
-    );
+      );
+    })
   });
 
   apiRoutes.post("/create", function(req, res) {
