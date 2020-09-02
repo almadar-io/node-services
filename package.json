@@ -29,7 +29,7 @@
     "express-graphql": "^0.6.3",
     "express-session": "^1.15.6",
     "google-spreadsheets": "^0.5.1",
-    "googleapis": "^18.0.0",
+    "googleapis": "^39.1.0",
     "graphql": "^0.9.1",
     "graphql-tools": "^4.0.2",
     "i18next": "^11.9.0",
