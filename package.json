@@ -58,7 +58,7 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "express-print-routes": "^1.0.0",
     "jest": "^24.1.0",
     "moxios": "^0.4.0",
