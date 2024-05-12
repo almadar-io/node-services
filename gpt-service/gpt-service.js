@@ -3,8 +3,7 @@ const axios = require("axios");
 
 const chatGPTService = function(config) {
   var apiRoutes = express.Router();
-  const openai_key = config.get("openai.key");
-
+  const openai_key = process.env.OPEN_AI_KEY;
   // Post route to handle chat requests
   apiRoutes.post("/chat", async (req, res) => {
     const { prompt } = req.body;

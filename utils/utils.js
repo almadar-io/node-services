@@ -1,5 +1,4 @@
 const fs = require("fs");
-const uuidv1 = require("uuid/v1");
 const path = require("path");
 
 module.exports.executeDomain = (req, res, domainFn) => {
