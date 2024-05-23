@@ -1,4 +1,4 @@
-module.exports.getServerlessFile = modelName => {
+export const getServerlessFile = modelName => {
   return `service: orbital-backend-${modelName}
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details

@@ -1,4 +1,4 @@
-module.exports.connectToDb = function(MongoDb, config, cb) {
+export const connectToDb = function(MongoDb, config, cb) {
   const dbConnection = MongoDb({
     config,
     onDBInit: data => cb(null, data),

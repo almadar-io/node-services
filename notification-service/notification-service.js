@@ -5,7 +5,7 @@ const socketService = require("../socket-service/socket-service");
 // Initialize the SNS client
 const snsClient = new SNSClient({ region: "us-east-1" });
 
-module.exports.notificationService = function({ modelName, server, config }) {
+export const notificationService = function({ modelName, server, config }) {
   const apiRoutes = express.Router();
   const afterSocketInit = new Promise((resolve, reject) => {
     socketService({
@@ -37,7 +37,7 @@ module.exports.notificationService = function({ modelName, server, config }) {
   return { apiRoutes, afterSocketInit };
 };
 
-module.exports.publish = async function publish({ modelName, message }) {
+export const publish = async function publish({ modelName, message }) {
   try {
     // Create publish parameters
     const params = {
@@ -61,7 +61,7 @@ module.exports.publish = async function publish({ modelName, message }) {
   }
 };
 
-module.exports.subscribe = async function subscribe({ modelName, onEvent, config }) {
+export const subscribe = async function subscribe({ modelName, onEvent, config }) {
   try {
     const params = {
       Protocol: "https", /* required */

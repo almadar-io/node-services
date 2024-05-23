@@ -1,4 +1,4 @@
-module.exports.getHandler = (modelname, path) => {
+export const getHandler = (modelname, path) => {
   return `
   const mongoose = require("mongoose");
   const config = require("config");

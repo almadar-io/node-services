@@ -2,7 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 var apiRoutes = express.Router();
 
-module.exports.isAuthenticated = (token, secret) => {
+export const isAuthenticated = (token, secret) => {
   // verifies secret and checks exp
   return new Promise((resolve, reject) => {
     jwt.verify(token, secret, function(err, decoded) {

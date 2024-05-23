@@ -30,8 +30,8 @@ const sendEmail = async (from, to, template, subject) => {
   });
 };
 
-module.exports.sendEmail = sendEmail;
-module.exports.emailServiceApi = apiRoutes.post("/email", (req, res) => {
+export const sendEmail = sendEmail;
+export const emailServiceApi = apiRoutes.post("/email", (req, res) => {
   let { from, to, template, subject } = req.body;
   sendEmail(from, to, template, subject);
   res.status(200).send("Email sent");
