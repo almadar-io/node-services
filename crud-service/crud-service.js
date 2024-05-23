@@ -171,4 +171,4 @@ const crudService = function ({
   return apiRoutes;
 };
 
-module.exports = crudService;
+export default crudService;

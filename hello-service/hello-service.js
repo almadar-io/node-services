@@ -6,7 +6,7 @@ const express = require('express');
 // ---------------------------------------------------------
 var apiRoutes = express.Router();
 
-module.exports =  function auth({
+function auth({
     app
 }) {
     apiRoutes.get('/', function(req, res) {
@@ -14,3 +14,5 @@ module.exports =  function auth({
     });
     return apiRoutes;
 }
+
+export default auth;

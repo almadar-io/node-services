@@ -7,7 +7,7 @@ const config = require("config"); // get our config require(file)
 const MAX_SIZE = 10 * 1024 * 1024;
 const MAX_FILE_COUNT = 30;
 
-module.exports = function({
+const mediaService = ({
   fileName,
   fileExtension,
   subRoute,
@@ -15,7 +15,7 @@ module.exports = function({
   mediaDomainLogic: { saveMedia },
   Model,
   onError
-}) {
+})=>{
   const ip = config.get("server.media");
   let apiRoutes = express.Router();
   let mediaFolder = "./media";
@@ -143,3 +143,5 @@ module.exports = function({
 
   return apiRoutes;
 };
+
+export default mediaService;

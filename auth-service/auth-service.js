@@ -2,7 +2,7 @@
 const express = require("express");
 const AWS = require("amazon-cognito-identity-js");
 
-module.exports = function({
+const authService = function({
   config,
   passport,
   onVerify,
@@ -63,3 +63,5 @@ module.exports = function({
   });
   return apiRoutes;
 };
+
+export default authService;

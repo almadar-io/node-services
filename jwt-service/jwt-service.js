@@ -15,7 +15,7 @@ export const isAuthenticated = (token, secret) => {
   });
 };
 
-module.exports = function jwtService({ secret, onVerify }) {
+export const jwtService = ({ secret, onVerify }) {
   // route middleware to verify a token
   apiRoutes.use("/", function(req, res, next) {
     // check header or url parameters or post parameters for token

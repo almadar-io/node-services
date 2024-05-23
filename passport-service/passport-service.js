@@ -17,7 +17,7 @@ const parseCallbackHost = host => {
   return host;
 };
 
-module.exports = function({
+const passportService = function({
   config,
   passport,
   onVerify,
@@ -169,3 +169,5 @@ module.exports = function({
 
   return apiRoutes;
 };
+
+export default passportService;

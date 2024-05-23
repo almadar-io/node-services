@@ -37,4 +37,4 @@ const i18nService = () => {
   return apiRoutes;
 };
 
-module.exports = i18nService;
+export default i18nService;

@@ -15,7 +15,7 @@ const notificationService = require("./notification-service/notification-service
 const vizService = require("./viz-service/viz-service");
 const emailService = require("./email-service/email-service");
 
-const exported = {
+export {
   crudService,
   eventService,
   socketService,
@@ -34,4 +34,3 @@ const exported = {
   settingsService
 };
 
-module.exports = exported;

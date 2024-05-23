@@ -11,13 +11,13 @@ function formatServiceFile(file) {
   return lines.map((line, index) => {});
 }
 
-module.exports = function lambdaService({
+const lambdaService =({
   lambdaModel,
   APP_PATH,
   MODELS_FOLDER,
   MongoDb,
   config
-}) {
+})=>{
   connectToDb(MongoDb, config, (err, data) => {
     //store all the routes that will be part of lambda
     lambdaModel.find({}).exec((err, routes) => {
@@ -93,3 +93,5 @@ module.exports = function lambdaService({
     });
   });
 };
+
+export default lambdaService;

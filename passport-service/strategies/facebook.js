@@ -1,12 +1,12 @@
 var FacebookStrategy = require("passport-facebook");
 
-module.exports =  function twitter({
+const twitter = ({
   passport,
   clientId,
   clientSecret,
   callbackURL,
   onVerify
-}) {
+})=>{
   passport.use(
     new FacebookStrategy(
       {
@@ -21,3 +21,5 @@ module.exports =  function twitter({
     )
   );
 }
+
+export default twitter;

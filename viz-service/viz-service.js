@@ -1,7 +1,7 @@
 const express = require("express");
 const { executeDomain } = require("../utils/utils");
 
-module.exports = function({
+const kernelService = function({
   Model,
   domainLogic: { average, min, max, count, distinct, sum, aggregate }
 }) {
@@ -286,3 +286,5 @@ module.exports = function({
 
   return apiRoutes;
 };
+
+export default kernelService;

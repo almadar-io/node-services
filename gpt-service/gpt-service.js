@@ -73,4 +73,4 @@ const chatGPTService = function(config) {
   return apiRoutes;
 };
 
-module.exports = chatGPTService;
+export default chatGPTService;
