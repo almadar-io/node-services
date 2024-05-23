@@ -19,6 +19,7 @@
   "homepage": "https://github.com/markab-io/node-services#readme",
   "dependencies": {
     "@aws-sdk/client-ses": "^3.582.0",
+    "@aws-sdk/client-sns": "^3.582.0",
     "amazon-cognito-identity-js": "^6.3.12",
     "aws-sdk": "^2.544.0",
     "config": "^3.3.11",
