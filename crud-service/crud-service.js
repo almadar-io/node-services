@@ -25,7 +25,6 @@ const crudService = function ({
       });
     }
     let exclusionList = exclude && exclude.map((ex) => `-${ex}`).join(" ");
-    console.log(query);
     Model.find(query)
       .sort("-createdAt")
       .populate((Array.isArray(populate) && populate.join(" ")) || "")
