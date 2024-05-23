@@ -10,8 +10,9 @@ const crudService = function ({
 
   apiRoutes.get("/", async (req, res) => {
     try {
-      await mongoose.connection.asPromise(); // Ensure the connection is established
-      let { criteria, isPermitted, populate, onResponse, exclude } = executeDomain(req, res, read);
+      await mongoose.connection; // Ensure the connection is established
+      let { criteria, isPermitted, populate, onResponse, exclude } =
+        executeDomain(req, res, read);
       let query = criteria ? criteria.query : {};
       if (!populate) {
         populate = "";
@@ -34,14 +35,16 @@ const crudService = function ({
         res.status(200).send({ data, count: data.length });
       }
     } catch (err) {
-      return res.status(500).send({ message: `Database connection error: ${err.message}` });
+      return res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
   apiRoutes.get("/paginate/:page/:limit", async (req, res) => {
     try {
-      await mongoose.connection.asPromise(); // Ensure the connection is established
-      let { criteria, isPermitted, populate, onResponse, exclude } = executeDomain(req, res, read);
+      let { criteria, isPermitted, populate, onResponse, exclude } =
+        executeDomain(req, res, read);
       let { query } = criteria;
       let { page, limit } = req.params;
       page = parseInt(page);
@@ -56,15 +59,12 @@ const crudService = function ({
       }
       let exclusionList = exclude && exclude.map((ex) => `-${ex}`).join(" ");
       const count = await Model.countDocuments(query).exec();
-      const data = await Model.paginate(
-        query,
-        {
-          page,
-          limit,
-          select: exclusionList,
-          sort: `-createdAt`,
-        }
-      );
+      const data = await Model.paginate(query, {
+        page,
+        limit,
+        select: exclusionList,
+        sort: `-createdAt`,
+      });
 
       if (onResponse) {
         onResponse({ data: data.docs, count }, req, res);
@@ -72,13 +72,14 @@ const crudService = function ({
         res.status(200).send({ data: data.docs, count });
       }
     } catch (err) {
-      return res.status(500).send({ message: `Database connection error: ${err.message}` });
+      return res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
   apiRoutes.post("/create", async (req, res) => {
     try {
-      await mongoose.connection.asPromise(); // Ensure the connection is established
       let { isPermitted, onResponse } = executeDomain(req, res, create);
       let newModel = new Model(req.body.model);
 
@@ -105,14 +106,19 @@ const crudService = function ({
         res.status(200).send(newModel);
       }
     } catch (err) {
-      return res.status(500).send({ message: `Database connection error: ${err.message}` });
+      return res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
   apiRoutes.put("/", async (req, res) => {
     try {
-      await mongoose.connection.asPromise(); // Ensure the connection is established
-      let { criteria, isPermitted, onResponse } = executeDomain(req, res, update);
+      let { criteria, isPermitted, onResponse } = executeDomain(
+        req,
+        res,
+        update
+      );
       if (!isPermitted) {
         return res.status(409).send({
           message: `You are not authorized to update this ${Model.modelName}`,
@@ -142,13 +148,14 @@ const crudService = function ({
         res.status(200).send(updatedModel);
       }
     } catch (err) {
-      return res.status(500).send({ message: `Database connection error: ${err.message}` });
+      return res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
   apiRoutes.delete("/:_id", async (req, res) => {
     try {
-      await mongoose.connection.asPromise(); // Ensure the connection is established
       let requestModelID = req.params._id;
       let { criteria, isPermitted } = executeDomain(req, res, del);
       if (!isPermitted) {
@@ -159,15 +166,20 @@ const crudService = function ({
       await Model.deleteOne({ _id: requestModelID, ...criteria }).exec();
       res.status(200).send();
     } catch (err) {
-      return res.status(500).send({ message: `Database connection error: ${err.message}` });
+      return res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
   apiRoutes.post("/search", async (req, res) => {
     try {
-      await mongoose.connection.asPromise(); // Ensure the connection is established
       let query = req.body.query;
-      let { criteria, isPermitted, onResponse } = executeDomain(req, res, search);
+      let { criteria, isPermitted, onResponse } = executeDomain(
+        req,
+        res,
+        search
+      );
       if (!isPermitted) {
         return res.status(409).send({
           message: `You are not authorized to search ${Model.modelName}s`,
@@ -180,7 +192,9 @@ const crudService = function ({
         res.status(200).send(results);
       }
     } catch (err) {
-      return res.status(500).send({ message: `Database connection error: ${err.message}` });
+      return res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
