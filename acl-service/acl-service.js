@@ -32,19 +32,6 @@ const setPermissions = (permissionsModel, lookUpKey) => {
   );
 };
 
-const clearPermissions = permissionsModel => {
-  return permissionsModel.update(
-    {},
-    { obj: {} },
-    { multi: true },
-    (err, user) => {
-      if (err) {
-        return reject(err);
-      }
-      console.log("updated!");
-    }
-  );
-};
 
 module.exports.isPermitted = function isPermitted({ key }) {
   return true;
