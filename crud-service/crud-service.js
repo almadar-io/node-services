@@ -1,5 +1,6 @@
 const express = require("express");
 const { executeDomain } = require("../utils/utils");
+const mongoose = require("mongoose");
 
 const crudService = function ({
   Model,
@@ -9,6 +10,7 @@ const crudService = function ({
 
   apiRoutes.get("/", async (req, res) => {
     try {
+      await mongoose.connection.asPromise(); // Ensure the connection is established
       let { criteria, isPermitted, populate, onResponse, exclude } = executeDomain(req, res, read);
       let query = criteria ? criteria.query : {};
       if (!populate) {
@@ -38,6 +40,7 @@ const crudService = function ({
 
   apiRoutes.get("/paginate/:page/:limit", async (req, res) => {
     try {
+      await mongoose.connection.asPromise(); // Ensure the connection is established
       let { criteria, isPermitted, populate, onResponse, exclude } = executeDomain(req, res, read);
       let { query } = criteria;
       let { page, limit } = req.params;
@@ -75,6 +78,7 @@ const crudService = function ({
 
   apiRoutes.post("/create", async (req, res) => {
     try {
+      await mongoose.connection.asPromise(); // Ensure the connection is established
       let { isPermitted, onResponse } = executeDomain(req, res, create);
       let newModel = new Model(req.body.model);
 
@@ -107,6 +111,7 @@ const crudService = function ({
 
   apiRoutes.put("/", async (req, res) => {
     try {
+      await mongoose.connection.asPromise(); // Ensure the connection is established
       let { criteria, isPermitted, onResponse } = executeDomain(req, res, update);
       if (!isPermitted) {
         return res.status(409).send({
@@ -143,6 +148,7 @@ const crudService = function ({
 
   apiRoutes.delete("/:_id", async (req, res) => {
     try {
+      await mongoose.connection.asPromise(); // Ensure the connection is established
       let requestModelID = req.params._id;
       let { criteria, isPermitted } = executeDomain(req, res, del);
       if (!isPermitted) {
@@ -159,6 +165,7 @@ const crudService = function ({
 
   apiRoutes.post("/search", async (req, res) => {
     try {
+      await mongoose.connection.asPromise(); // Ensure the connection is established
       let query = req.body.query;
       let { criteria, isPermitted, onResponse } = executeDomain(req, res, search);
       if (!isPermitted) {
