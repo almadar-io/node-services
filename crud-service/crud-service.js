@@ -1,6 +1,5 @@
 const express = require("express");
 const { executeDomain } = require("../utils/utils");
-const mongoose = require("mongoose");
 
 const crudService = function ({
   Model,
@@ -10,7 +9,6 @@ const crudService = function ({
 
   apiRoutes.get("/", async (req, res) => {
     try {
-      await mongoose.connection; // Ensure the connection is established
       let { criteria, isPermitted, populate, onResponse, exclude } =
         executeDomain(req, res, read);
       let query = criteria ? criteria.query : {};
