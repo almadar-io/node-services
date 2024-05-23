@@ -3,15 +3,15 @@ const { executeDomain } = require("../utils/utils");
 
 module.exports.formsService = function formsService({
   Model,
-  formsDomainLogic: { read }
+  formsDomainLogic: { read },
 }) {
   var apiRoutes = express.Router();
 
-  apiRoutes.get("/forms", function(req, res) {
+  apiRoutes.get("/forms", function (req, res) {
     let { criteria, isPermitted, onResponse } = executeDomain(req, res, read);
     if (!isPermitted) {
       return res.status(409).send({
-        message: `You are not authorized to read ${Model.modelName}s`
+        message: `You are not authorized to read ${Model.modelName}s`,
       });
     }
     Model.findOne(criteria)
@@ -34,25 +34,18 @@ module.exports.registerForms = ({ key, fields, formsModel }) => {
   setForms(lookUpKey, fields, formsModel);
 };
 
-const setForms = (lookUpKey, fields, formsModel) => {
-  formsModel.update(
-    { key: lookUpKey },
-    { fields },
-    { multi: true, upsert: true },
-    (err, user) => {
-      if (err) {
-        console.error(err);
+const setForms = (lookUpKey, fields, formsModel, autoPopulateDB) => {
+  if (autoPopulateDB) {
+    formsModel.update(
+      { key: lookUpKey },
+      { fields },
+      { multi: true, upsert: true },
+      (err, user) => {
+        if (err) {
+          console.error(err);
+        }
+        console.info("forms set!");
       }
-      console.info("forms set!");
-    }
-  );
-};
-
-const clearForms = formsModel => {
-  return formsModel.update({}, { obj: {} }, { multi: true }, (err, user) => {
-    if (err) {
-      return reject(err);
-    }
-    console.log("updated!");
-  });
+    );
+  }
 };
