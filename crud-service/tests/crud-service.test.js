@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import crudService from '../crud-service';  // Adjust the path accordingly
 import Model from '@markab.io/orbital-api/MongoDb/models/knowledges';  // Adjust the path accordingly
+import {jest} from '@jest/globals'
 
 const app = express();
 app.use(express.json());
