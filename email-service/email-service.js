@@ -8,7 +8,7 @@ const sesClient = new SESClient({ region: 'your-region' });
 
 const getSESTransporter = () => {
   let transporter = nodemailer.createTransport({
-    SES: { ses: sesClient, aws: require("@aws-sdk/client-ses") }
+    SES: { sesClient, aws: { region: 'us-east-1' } }
   });
   return transporter;
 }
@@ -30,7 +30,6 @@ const sendEmail = async (from, to, template, subject) => {
   });
 };
 
-export const sendEmail = sendEmail;
 export const emailServiceApi = apiRoutes.post("/email", (req, res) => {
   let { from, to, template, subject } = req.body;
   sendEmail(from, to, template, subject);
