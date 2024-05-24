@@ -1,9 +1,7 @@
 import request from 'supertest';
 import express from 'express';
-import mongoose from 'mongoose';
 import crudService from '../crud-service.js';  // Adjust the path accordingly
-import { mockModel } from '../../utils/mockMongoose.js';  // Adjust the path accordingly
-import {jest} from '@jest/globals';
+import { jest } from '@jest/globals';
 
 const app = express();
 app.use(express.json());
@@ -14,6 +12,24 @@ const mockCrudDomainLogic = {
   update: jest.fn(),
   del: jest.fn(),
   search: jest.fn(),
+};
+
+const mockExec = jest.fn();
+const mockSelect = jest.fn().mockReturnValue({ exec: mockExec });
+const mockPopulate = jest.fn().mockReturnValue({ select: mockSelect });
+const mockSort = jest.fn().mockReturnValue({ populate: mockPopulate });
+const mockFind = jest.fn().mockReturnValue({ sort: mockSort });
+
+const mockModel = {
+  find: mockFind,
+  paginate: jest.fn(),
+  joiValidate: jest.fn(),
+  prototype: {
+    save: jest.fn(),
+  },
+  findOneAndUpdate: jest.fn(),
+  deleteOne: jest.fn(),
+  countDocuments: jest.fn(),
 };
 
 const apiRoutes = crudService({
@@ -34,13 +50,8 @@ describe('CRUD Service', () => {
     it('should return data if permitted', async () => {
       const data = [{ name: 'test' }];
       mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: true, criteria: {} });
-      mockModel.find.mockReturnValueOnce({
-        sort: jest.fn().mockReturnValue({
-          populate: jest.fn().mockReturnValue({
-            select: jest.fn().mockResolvedValue(data),
-          }),
-        }),
-      });
+      mockExec.mockResolvedValueOnce(data);
+
       const res = await request(app).get('/api');
       expect(res.status).toBe(200);
       expect(res.body.data).toEqual(data);
@@ -58,6 +69,7 @@ describe('CRUD Service', () => {
       const data = { docs: [{ name: 'test' }], totalDocs: 1 };
       mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: true, criteria: {} });
       mockModel.paginate.mockResolvedValueOnce(data);
+
       const res = await request(app).get('/api/paginate/1/10');
       expect(res.status).toBe(200);
       expect(res.body.data).toEqual(data.docs);
@@ -81,7 +93,7 @@ describe('CRUD Service', () => {
     it('should return new model if permitted and valid', async () => {
       const newModel = { name: 'test' };
       mockModel.joiValidate.mockReturnValueOnce({ error: null });
-      mockModel.prototype.save = jest.fn().mockResolvedValue(newModel);
+      mockModel.prototype.save.mockResolvedValueOnce(newModel);
       mockCrudDomainLogic.create.mockReturnValueOnce({ isPermitted: true });
       const res = await request(app).post('/api/create').send({ model: newModel });
       expect(res.status).toBe(200);
@@ -139,7 +151,8 @@ describe('CRUD Service', () => {
     it('should return search results if permitted', async () => {
       const results = [{ name: 'test' }];
       mockCrudDomainLogic.search.mockReturnValueOnce({ isPermitted: true, criteria: {} });
-      mockModel.find.mockResolvedValueOnce(results);
+      mockExec.mockResolvedValueOnce(results);
+
       const res = await request(app).post('/api/search').send({ query: {} });
       expect(res.status).toBe(200);
       expect(res.body).toEqual(results);
