@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "test": "jest"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "repository": {
     "type": "git",
@@ -19,8 +19,8 @@
   },
   "homepage": "https://github.com/markab-io/node-services#readme",
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.582.0",
-    "@aws-sdk/client-sns": "^3.582.0",
+    "@aws-sdk/client-ses": "^3.583.0",
+    "@aws-sdk/client-sns": "^3.583.0",
     "amazon-cognito-identity-js": "^6.3.12",
     "config": "^3.3.11",
     "dotenv": "^16.4.5",
@@ -41,14 +41,12 @@
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.5",
+    "@babel/preset-env": "^7.24.5",
     "axios": "^1.7.2",
+    "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
-  },
-  "jest": {
-    "setupFiles": [
-      "./setupTests.js"
-    ]
   },
   "keywords": [
     "nodejs-services"
