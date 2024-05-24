@@ -1,7 +1,7 @@
-const express = require("express");
-const { executeDomain } = require("../utils/utils");
+import express from 'express';
+import {  executeDomain  } from '../utils/utils.js';
 
-module.exports.settingsService = function settingsService({
+export const settingsService = function settingsService({
   Model,
   settingsDomainLogic: { read }
 }) {
@@ -28,7 +28,7 @@ module.exports.settingsService = function settingsService({
   return apiRoutes;
 };
 
-module.exports.registerSettings = ({ key, fields, settingsModel }) => {
+export const registerSettings = ({ key, fields, settingsModel }) => {
   let lookUpKey = key;
   // clearPermissions(settingsModel);
   setSettings(lookUpKey, fields, settingsModel);

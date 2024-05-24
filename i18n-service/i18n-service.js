@@ -1,8 +1,8 @@
-const express = require("express");
+import express from 'express';
 var apiRoutes = express.Router();
-const i18next = require("i18next");
-const i18nextExpress = require("i18next-express-middleware");
-const FilesystemBackend = require("i18next-node-fs-backend");
+import i18next from 'i18next';
+import i18nextExpress from 'i18next-express-middleware';
+import FilesystemBackend from 'i18next-node-fs-backend';
 
 const i18nService = () => {
   //i18n
@@ -37,4 +37,4 @@ const i18nService = () => {
   return apiRoutes;
 };
 
-module.exports = i18nService;
+export default i18nService;

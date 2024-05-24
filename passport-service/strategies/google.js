@@ -1,23 +1,25 @@
-var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+import { Strategy as GoogleStrategy } from "passport-google-oauth";
 
-module.exports =  function google({
+const google = ({
   passport,
   clientId,
   clientSecret,
   callbackURL,
-  onVerify
-}) {
+  onVerify,
+}) => {
   passport.use(
     new GoogleStrategy(
       {
         clientID: clientId,
         clientSecret: clientSecret,
-        callbackURL
+        callbackURL,
       },
-      function(accessToken, refreshToken, profile, cb) {
+      function (accessToken, refreshToken, profile, cb) {
         let providerName = "google";
         onVerify({ accessToken, refreshToken, profile, cb, providerName });
       }
     )
   );
-}
+};
+
+export default google;

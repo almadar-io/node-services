@@ -1,7 +1,7 @@
 let config = {
   "presets": ["@babel/preset-env"],
 }
-module.exports = function (api) {
+const webpackConfig = function (api) {
   api.cache(true);
   const presets = config.presets;
   const plugins = config.plugins;
@@ -11,3 +11,5 @@ module.exports = function (api) {
     plugins
   };
 }
+
+export default webpackConfig;

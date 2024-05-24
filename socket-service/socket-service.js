@@ -1,9 +1,9 @@
-const io = require("socket.io");
-const express = require("express");
+import io from 'socket.io';
+import express from 'express';
 // ---------------------------------------------------------
 // get an instance of the router for api routes
 // ---------------------------------------------------------
-module.exports = function socketIO({
+const socketIO = ({
   onEvent,
   onUpdate,
   onDelete,
@@ -11,7 +11,7 @@ module.exports = function socketIO({
   channel,
   port,
   server
-}) {
+})=>{
   var apiRoutes = express.Router();
   var ioServer = io(server);
   ioServer.origins((origin, callback) => {
@@ -46,3 +46,5 @@ module.exports = function socketIO({
   });
   return apiRoutes;
 };
+
+export default socketIO;

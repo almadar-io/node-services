@@ -1,11 +1,11 @@
-// Load the AWS SDK for Node.js
-const AWS = require("aws-sdk");
-const express = require("express");
-const socketService = require("../socket-service/socket-service");
-// Set region
-AWS.config.update({ region: "us-east-1" });
+import {  SNSClient, PublishCommand, SubscribeCommand  } from '@aws-sdk/client-sns';
+import express from 'express';
+import socketService from '../socket-service/socket-service.js';
 
-module.exports.notificationService = function({ modelName, server, config }) {
+// Initialize the SNS client
+const snsClient = new SNSClient({ region: "us-east-1" });
+
+export const notificationService = function({ modelName, server, config }) {
   const apiRoutes = express.Router();
   const afterSocketInit = new Promise((resolve, reject) => {
     socketService({
@@ -23,53 +23,62 @@ module.exports.notificationService = function({ modelName, server, config }) {
       server
     });
   });
-  afterSocketInit.then(socket => {
+
+  afterSocketInit.then(({ io, socket }) => {
     apiRoutes.post(
       `${config.get("notificationUrl")}/${modelName}`,
       (req, res) => {
-        socket.emit("sns-data", req.body);
+        io.emit("sns-data", req.body);
         res.send("done!");
       }
     );
   });
+
   return { apiRoutes, afterSocketInit };
 };
-module.exports.publish = function publish({ modelName, message }) {
-  // Create publish parameters
-  var params = {
-    Message: message /* required */,
-    TopicArn: modelName
-  };
 
-  // Create promise and SNS service object
-  var publishTextPromise = new AWS.SNS({ apiVersion: "2010-03-31" })
-    .publish(params)
-    .promise();
+export const publish = async function publish({ modelName, message }) {
+  try {
+    // Create publish parameters
+    const params = {
+      Message: message, /* required */
+      TopicArn: modelName
+    };
 
-  // Handle promise's fulfilled/rejected states
-  publishTextPromise
-    .then(function(data) {
-      console.log(
-        "Message ${params.Message} send sent to the topic ${params.TopicArn}"
-      );
-      console.log("MessageID is " + data.MessageId);
-    })
-    .catch(function(err) {
-      console.error(err, err.stack);
-    });
-  return publishTextPromise;
+    // Create publish command
+    const publishCommand = new PublishCommand(params);
+
+    // Send publish command
+    const data = await snsClient.send(publishCommand);
+
+    console.log(`Message "${params.Message}" sent to the topic "${params.TopicArn}"`);
+    console.log("MessageID is " + data.MessageId);
+
+    return data;
+  } catch (err) {
+    console.error(err, err.stack);
+    throw err;
+  }
 };
-module.exports.subscribe = function subscribe({ modelName, onEvent }) {
-  var params = {
-    Protocol: "https" /* required */,
-    TopicArn: modelName,
-    Endpoint: `${config.get("notificationUrl")}/${modelName}`
-  };
-  sns.subscribe(params, function(err, data) {
-    if (err) {
-      console.log(err, err.stack);
-      return;
-    }
+
+export const subscribe = async function subscribe({ modelName, onEvent, config }) {
+  try {
+    const params = {
+      Protocol: "https", /* required */
+      TopicArn: modelName,
+      Endpoint: `${config.get("notificationUrl")}/${modelName}`
+    };
+
+    // Create subscribe command
+    const subscribeCommand = new SubscribeCommand(params);
+
+    // Send subscribe command
+    const data = await snsClient.send(subscribeCommand);
+
     onEvent(data);
-  });
+    return data;
+  } catch (err) {
+    console.error(err, err.stack);
+    throw err;
+  }
 };

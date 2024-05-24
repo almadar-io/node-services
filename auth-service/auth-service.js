@@ -1,8 +1,8 @@
 // basic route (http://localhost:8080)
-const express = require("express");
-const AWS = require("amazon-cognito-identity-js");
+import express from 'express';
+import AWS from 'amazon-cognito-identity-js';
 
-module.exports = function({
+const authService = function({
   config,
   passport,
   onVerify,
@@ -63,3 +63,5 @@ module.exports = function({
   });
   return apiRoutes;
 };
+
+export default authService;

@@ -26,3 +26,4 @@ env/
 data/
 client_secret.json
 npm-debug.log
+*.bak

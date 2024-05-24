@@ -1,4 +1,4 @@
-module.exports.getPackage = () => {
+export const getPackage = () => {
   return `{
   "name": "itechdom-playground-node",
   "version": "1.0.0",

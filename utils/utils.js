@@ -1,7 +1,7 @@
-const fs = require("fs");
-const path = require("path");
+import fs from 'fs';
+import path from 'path';
 
-module.exports.executeDomain = (req, res, domainFn) => {
+export const executeDomain = (req, res, domainFn) => {
   //returns criteria
   let user = req.decoded;
   if (!user) {
@@ -12,7 +12,7 @@ module.exports.executeDomain = (req, res, domainFn) => {
   return domainFn(user, req, res);
 };
 
-module.exports.parseNumberQuery = obj => {
+export const parseNumberQuery = obj => {
   Object.keys(obj).map(key => {
     if (parseInt(obj[key] && obj[key] !== 0)) {
       obj[key] = parseInt(obj[key]);
@@ -21,10 +21,10 @@ module.exports.parseNumberQuery = obj => {
   return obj;
 };
 
-module.exports.capitalize = function(string) {
+export const capitalize = function(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
-module.exports.readFiles = function(dirname, onFileContent, onError) {
+export const readFiles = function(dirname, onFileContent, onError) {
   fs.readdir(path.join(__dirname, dirname), function(err, filenames) {
     if (err) {
       onError(err);
@@ -44,4 +44,3 @@ module.exports.readFiles = function(dirname, onFileContent, onError) {
     });
   });
 };
-

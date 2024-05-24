@@ -1,23 +1,23 @@
-var TwitterStrategy = require("passport-twitter");
+import { Strategy as TwitterStrategy } from "passport-twitter";
 
-module.exports =  function twitter({
+const twitter = ({
   passport,
   clientId,
   clientSecret,
   callbackURL,
-  onVerify
-}) {
+  onVerify,
+}) => {
   passport.use(
     new TwitterStrategy(
       {
         clientID: clientId,
         clientSecret: clientSecret,
-        callbackURL
+        callbackURL,
       },
-      function(accessToken, refreshToken, profile, cb) {
+      function (accessToken, refreshToken, profile, cb) {
         let providerName = "twitter";
         onVerify({ accessToken, refreshToken, profile, cb, providerName });
       }
     )
   );
-}
+};

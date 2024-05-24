@@ -1,5 +1,5 @@
-const express = require("express");
-const axios = require("axios");
+import express from 'express';
+import axios from 'axios';
 
 const chatGPTService = function(config) {
   var apiRoutes = express.Router();
@@ -73,4 +73,4 @@ const chatGPTService = function(config) {
   return apiRoutes;
 };
 
-module.exports = chatGPTService;
+export default chatGPTService;

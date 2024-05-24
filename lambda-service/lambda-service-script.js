@@ -1,23 +1,23 @@
-const fs = require("fs");
-const path = require("path");
-const { connectToDb } = require("../utils/dbutils.js");
-const { getHandler } = require("./handler.js");
-const { getServerlessFile } = require("./serverless.js");
-const { getPackage } = require("./package.js");
-const { getMain } = require("./main.js");
+import fs from 'fs';
+import path from 'path';
+import {  connectToDb  } from '../utils/dbutils.js';
+import {  getHandler  } from './handler.js';
+import {  getServerlessFile  } from './serverless.js';
+import {  getPackage  } from './package.js';
+import {  getMain  } from './main.js';
 
 function formatServiceFile(file) {
   const lines = file.split("\n");
   return lines.map((line, index) => {});
 }
 
-module.exports = function lambdaService({
+const lambdaService =({
   lambdaModel,
   APP_PATH,
   MODELS_FOLDER,
   MongoDb,
   config
-}) {
+})=>{
   connectToDb(MongoDb, config, (err, data) => {
     //store all the routes that will be part of lambda
     lambdaModel.find({}).exec((err, routes) => {
@@ -93,3 +93,5 @@ module.exports = function lambdaService({
     });
   });
 };
+
+export default lambdaService;

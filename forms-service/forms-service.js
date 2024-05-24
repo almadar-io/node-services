@@ -1,7 +1,7 @@
-const express = require("express");
-const { executeDomain } = require("../utils/utils");
+import express from 'express';
+import {  executeDomain  } from '../utils/utils.js';
 
-module.exports.formsService = function formsService({
+export const formsService = function formsService({
   Model,
   formsDomainLogic: { read },
 }) {
@@ -28,7 +28,7 @@ module.exports.formsService = function formsService({
   return apiRoutes;
 };
 
-module.exports.registerForms = ({ key, fields, formsModel }) => {
+export const registerForms = ({ key, fields, formsModel }) => {
   let lookUpKey = key;
   // clearPermissions(formsModel);
   setForms(lookUpKey, fields, formsModel);

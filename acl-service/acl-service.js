@@ -1,9 +1,9 @@
-const express = require("express");
+import express from 'express';
 
 /* Zee:
   not very clear what registerAction really registers. 
  */
-module.exports.registerAction = ({
+export const registerAction = ({
   key,
   domainLogic,
   permissionsModel,
@@ -38,11 +38,11 @@ const setPermissions = (
   }
 };
 
-module.exports.isPermitted = function isPermitted({ key }) {
+export const isPermitted = function isPermitted({ key }) {
   return true;
 };
 
-module.exports.aclService = function ({ permissionsModel }) {
+export const aclService = function ({ permissionsModel }) {
   const apiRoutes = express.Router();
   return apiRoutes;
 };

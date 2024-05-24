@@ -1,8 +1,8 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
+import express from 'express';
+import jwt from 'jsonwebtoken';
 var apiRoutes = express.Router();
 
-module.exports.isAuthenticated = (token, secret) => {
+export const isAuthenticated = (token, secret) => {
   // verifies secret and checks exp
   return new Promise((resolve, reject) => {
     jwt.verify(token, secret, function(err, decoded) {
@@ -15,7 +15,7 @@ module.exports.isAuthenticated = (token, secret) => {
   });
 };
 
-module.exports = function jwtService({ secret, onVerify }) {
+export const jwtService = ({ secret, onVerify }) {
   // route middleware to verify a token
   apiRoutes.use("/", function(req, res, next) {
     // check header or url parameters or post parameters for token

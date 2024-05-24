@@ -1,12 +1,12 @@
 // basic route (http://localhost:8080)
-const express = require('express');
+import express from 'express';
 
 // ---------------------------------------------------------
 // get an instance of the router for api routes
 // ---------------------------------------------------------
 var apiRoutes = express.Router();
 
-module.exports =  function auth({
+function auth({
     app
 }) {
     apiRoutes.get('/', function(req, res) {
@@ -14,3 +14,5 @@ module.exports =  function auth({
     });
     return apiRoutes;
 }
+
+export default auth;

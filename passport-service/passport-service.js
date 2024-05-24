@@ -1,9 +1,9 @@
 // basic route (http://localhost:8080)
-const express = require("express");
-const googlePassport = require("./strategies/google.js");
-const localPassport = require("./strategies/local.js");
-const twitterPassport = require("./strategies/twitter.js");
-const facebookPassport = require("./strategies/facebook.js");
+import express from 'express';
+import googlePassport from './strategies/google.js';
+import localPassport from './strategies/local.js';
+import twitterPassport from './strategies/twitter.js';
+import facebookPassport from './strategies/facebook.js';
 
 // ---------------------------------------------------------
 // get an instance of the router for api routes
@@ -17,7 +17,7 @@ const parseCallbackHost = host => {
   return host;
 };
 
-module.exports = function({
+const passportService = function({
   config,
   passport,
   onVerify,
@@ -169,3 +169,5 @@ module.exports = function({
 
   return apiRoutes;
 };
+
+export default passportService;

@@ -1,44 +1,37 @@
-const nodemailer = require("nodemailer");
-const express = require("express");
-const aws = require("aws-sdk")
+import {  SESClient, SendEmailCommand  } from '@aws-sdk/client-ses';
+import express from 'express';
+import nodemailer from 'nodemailer';
 const apiRoutes = express.Router();
+
+// Initialize the SES client
+const sesClient = new SESClient({ region: 'your-region' });
 
 const getSESTransporter = () => {
   let transporter = nodemailer.createTransport({
-    SES: new aws.SES({ apiVersion: '2010-12-01' })
+    SES: { sesClient, aws: { region: 'us-east-1' } }
   });
   return transporter;
 }
 
-const sendEmail = async(from, to, template, subject) => {
-  // create reusable transporter object using the default SMTP transport
+const sendEmail = async (from, to, template, subject) => {
   let transporter = getSESTransporter();
 
-  // send some mail
   transporter.sendMail({
-    from: 'samalghanmi@markab.io',
-    to: 'oalghnmi@gmail.com',
+    from: from,
+    to: to,
     text: template,
     subject: subject
   }, (err, info) => {
     if (err) {
-      return console.log("ERR!", err)
+      return console.log("ERR!", err);
     }
     console.log(info.envelope);
     console.log(info.messageId);
   });
-
-  // send mail with defined transport object
-  // let info = await transporter.sendMail(mailOptions);
-  // console.log("Message sent: %s", info.messageId);
-  // // Preview only available when sending through an Ethereal account
-  // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  // // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-  // // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 };
 
-module.exports.sendEmail = sendEmail;
-module.exports.emailServiceApi = apiRoutes.post("/email", (req, res) => {
-  let { from, to, template } = require(req.body);
-  sendEmail(from, to, template);
+export const emailServiceApi = apiRoutes.post("/email", (req, res) => {
+  let { from, to, template, subject } = req.body;
+  sendEmail(from, to, template, subject);
+  res.status(200).send("Email sent");
 });
