@@ -3,7 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import crudService from "../crud-service.js"; // Adjust the path accordingly
 import { mockModel } from "../../utils/mockMongoose.js"; // Adjust the path accordingly
-import Knowledge from "@markab.io/orbital-api/MongoDb/models/knowledges.js"; // Your Mongoose model
+import Model from "@markab.io/orbital-api/MongoDb/models/knowledges.js"; // Your Mongoose model
 import { jest } from "@jest/globals";
 
 const app = express();
@@ -27,7 +27,7 @@ app.use("/api", apiRoutes);
 describe("CRUD Service", () => {
   beforeAll(async () => {
     // Setup test data if necessary
-    Knowledge.create.mockResolvedValue({
+    jest.spyOn(Model, "create").mockResolvedValue({
       /* your test data */
     });
   });
@@ -36,6 +36,7 @@ describe("CRUD Service", () => {
     // Clean up test data if necessary
     jest.clearAllMocks();
   });
+
   describe("GET /", () => {
     it("should return 409 if not permitted", async () => {
       mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: false });
@@ -44,53 +45,86 @@ describe("CRUD Service", () => {
           /* your mocked data */
         },
       ];
-      Knowledge.find.mockResolvedValue(mockData);
+      jest.spyOn(Model, "find").mockReturnValueOnce({
+        sort: jest.fn().mockReturnThis(),
+        populate: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockData),
+      });
+
       const res = await request(app).get("/api");
       expect(res.status).toBe(409);
       // Verify the methods were called correctly
-      expect(Knowledge.find).toHaveBeenCalled();
-      expect(Knowledge.sort).toHaveBeenCalledWith("-createdAt");
-      expect(Knowledge.populate).toHaveBeenCalled();
-      expect(Knowledge.select).toHaveBeenCalled();
-      expect(Knowledge.exec).toHaveBeenCalled();
+      expect(Model.find).toHaveBeenCalled();
+      expect(Model.find().sort).toHaveBeenCalledWith("-createdAt");
+      expect(Model.find().populate).toHaveBeenCalled();
+      expect(Model.find().select).toHaveBeenCalled();
+      expect(Model.find().exec).toHaveBeenCalled();
     });
 
     it("should return data if permitted", async () => {
-      const data = [{ name: "test" }];
+      const mockData = [{ name: "test" }];
       mockCrudDomainLogic.read.mockReturnValueOnce({
         isPermitted: true,
         criteria: {},
       });
-      mockModel.find.mockReturnValueOnce({
-        sort: jest.fn().mockReturnValue({
-          populate: jest.fn().mockReturnValue({
-            select: jest.fn().mockResolvedValue(data),
-          }),
-        }),
+      jest.spyOn(Model, "find").mockReturnValueOnce({
+        sort: jest.fn().mockReturnThis(),
+        populate: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockData),
       });
+
       const res = await request(app).get("/api");
       expect(res.status).toBe(200);
-      expect(res.body.data).toEqual(data);
+      expect(res.body.data).toEqual(mockData);
+      // Verify the methods were called correctly
+      expect(Model.find).toHaveBeenCalled();
+      expect(Model.find().sort).toHaveBeenCalledWith("-createdAt");
+      expect(Model.find().populate).toHaveBeenCalled();
+      expect(Model.find().select).toHaveBeenCalled();
+      expect(Model.find().exec).toHaveBeenCalled();
     });
   });
 
   describe("GET /paginate/:page/:limit", () => {
     it("should return 409 if not permitted", async () => {
       mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: false });
+      const mockData = [
+        {
+          /* your mocked data */
+        },
+      ];
+      jest.spyOn(Model, "find").mockReturnValueOnce({
+        sort: jest.fn().mockReturnThis(),
+        populate: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockData),
+      });
+
       const res = await request(app).get("/api/paginate/1/10");
       expect(res.status).toBe(409);
+      // Verify the methods were called correctly
+      expect(Model.find).toHaveBeenCalled();
+      expect(Model.find().sort).toHaveBeenCalledWith("-createdAt");
+      expect(Model.find().populate).toHaveBeenCalled();
+      expect(Model.find().select).toHaveBeenCalled();
+      expect(Model.find().exec).toHaveBeenCalled();
     });
 
     it("should return paginated data if permitted", async () => {
-      const data = { docs: [{ name: "test" }], totalDocs: 1 };
+      const mockData = { docs: [{ name: "test" }], totalDocs: 1 };
       mockCrudDomainLogic.read.mockReturnValueOnce({
         isPermitted: true,
         criteria: {},
       });
-      mockModel.paginate.mockResolvedValueOnce(data);
+      jest.spyOn(Model, "paginate").mockResolvedValueOnce(mockData);
+
       const res = await request(app).get("/api/paginate/1/10");
       expect(res.status).toBe(200);
-      expect(res.body.data).toEqual(data.docs);
+      expect(res.body.data).toEqual(mockData.docs);
+      // Verify the methods were called correctly
+      expect(Model.paginate).toHaveBeenCalled();
     });
   });
 
@@ -111,13 +145,16 @@ describe("CRUD Service", () => {
     it("should return new model if permitted and valid", async () => {
       const newModel = { name: "test" };
       mockModel.joiValidate.mockReturnValueOnce({ error: null });
-      mockModel.prototype.save = jest.fn().mockResolvedValue(newModel);
+      jest.spyOn(Model.prototype, "save").mockResolvedValueOnce(newModel);
       mockCrudDomainLogic.create.mockReturnValueOnce({ isPermitted: true });
+
       const res = await request(app)
         .post("/api/create")
         .send({ model: newModel });
       expect(res.status).toBe(200);
       expect(res.body).toEqual(newModel);
+      // Verify the methods were called correctly
+      expect(Model.prototype.save).toHaveBeenCalled();
     });
   });
 
@@ -138,11 +175,14 @@ describe("CRUD Service", () => {
     it("should return updated model if permitted and valid", async () => {
       const updatedModel = { name: "test" };
       mockModel.joiValidate.mockReturnValueOnce({ error: null });
-      mockModel.findOneAndUpdate.mockResolvedValueOnce(updatedModel);
+      jest.spyOn(Model, "findOneAndUpdate").mockResolvedValueOnce(updatedModel);
       mockCrudDomainLogic.update.mockReturnValueOnce({ isPermitted: true });
+
       const res = await request(app).put("/api").send({ model: updatedModel });
       expect(res.status).toBe(200);
       expect(res.body).toEqual(updatedModel);
+      // Verify the methods were called correctly
+      expect(Model.findOneAndUpdate).toHaveBeenCalled();
     });
   });
 
@@ -155,9 +195,11 @@ describe("CRUD Service", () => {
 
     it("should return 200 if permitted", async () => {
       mockCrudDomainLogic.del.mockReturnValueOnce({ isPermitted: true });
-      mockModel.deleteOne.mockResolvedValueOnce({});
+      jest.spyOn(Model, "deleteOne").mockResolvedValueOnce({});
       const res = await request(app).delete("/api/123");
       expect(res.status).toBe(200);
+      // Verify the methods were called correctly
+      expect(Model.deleteOne).toHaveBeenCalled();
     });
   });
 
@@ -174,10 +216,13 @@ describe("CRUD Service", () => {
         isPermitted: true,
         criteria: {},
       });
-      mockModel.find.mockResolvedValueOnce(results);
+      jest.spyOn(Model, "find").mockResolvedValueOnce(results);
+
       const res = await request(app).post("/api/search").send({ query: {} });
       expect(res.status).toBe(200);
       expect(res.body).toEqual(results);
+      // Verify the methods were called correctly
+      expect(Model.find).toHaveBeenCalled();
     });
   });
 });
