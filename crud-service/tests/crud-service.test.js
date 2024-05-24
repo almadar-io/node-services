@@ -1,9 +1,9 @@
 import request from 'supertest';
 import express from 'express';
 import mongoose from 'mongoose';
-import crudService from '../crud-service';  // Adjust the path accordingly
-import Model from '@markab.io/orbital-api/MongoDb/models/knowledges';  // Adjust the path accordingly
-import {jest} from '@jest/globals'
+import crudService from '../crud-service.js';  // Adjust the path accordingly
+import { mockModel } from '../../utils/mockMongoose.js';  // Adjust the path accordingly
+import {jest} from '@jest/globals';
 
 const app = express();
 app.use(express.json());
@@ -17,21 +17,11 @@ const mockCrudDomainLogic = {
 };
 
 const apiRoutes = crudService({
-  Model,
+  Model: mockModel,
   crudDomainLogic: mockCrudDomainLogic,
 });
 
 app.use('/api', apiRoutes);
-
-beforeAll(async () => {
-  // Connect to the database
-  await mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-});
-
-afterAll(async () => {
-  // Disconnect from the database
-  await mongoose.disconnect();
-});
 
 describe('CRUD Service', () => {
   describe('GET /', () => {
@@ -44,7 +34,13 @@ describe('CRUD Service', () => {
     it('should return data if permitted', async () => {
       const data = [{ name: 'test' }];
       mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: true, criteria: {} });
-      Model.find = jest.fn().mockReturnValue({ sort: jest.fn().mockReturnValue({ populate: jest.fn().mockReturnValue({ select: jest.fn().mockResolvedValue(data) }) }) });
+      mockModel.find.mockReturnValueOnce({
+        sort: jest.fn().mockReturnValue({
+          populate: jest.fn().mockReturnValue({
+            select: jest.fn().mockResolvedValue(data),
+          }),
+        }),
+      });
       const res = await request(app).get('/api');
       expect(res.status).toBe(200);
       expect(res.body.data).toEqual(data);
@@ -61,7 +57,7 @@ describe('CRUD Service', () => {
     it('should return paginated data if permitted', async () => {
       const data = { docs: [{ name: 'test' }], totalDocs: 1 };
       mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: true, criteria: {} });
-      Model.paginate = jest.fn().mockResolvedValue(data);
+      mockModel.paginate.mockResolvedValueOnce(data);
       const res = await request(app).get('/api/paginate/1/10');
       expect(res.status).toBe(200);
       expect(res.body.data).toEqual(data.docs);
@@ -76,7 +72,7 @@ describe('CRUD Service', () => {
     });
 
     it('should return 409 on validation error', async () => {
-      Model.joiValidate = jest.fn().mockReturnValue({ error: 'Validation error' });
+      mockModel.joiValidate.mockReturnValueOnce({ error: 'Validation error' });
       mockCrudDomainLogic.create.mockReturnValueOnce({ isPermitted: true });
       const res = await request(app).post('/api/create').send({ model: {} });
       expect(res.status).toBe(409);
@@ -84,8 +80,8 @@ describe('CRUD Service', () => {
 
     it('should return new model if permitted and valid', async () => {
       const newModel = { name: 'test' };
-      Model.joiValidate = jest.fn().mockReturnValue({ error: null });
-      Model.prototype.save = jest.fn().mockResolvedValue(newModel);
+      mockModel.joiValidate.mockReturnValueOnce({ error: null });
+      mockModel.prototype.save = jest.fn().mockResolvedValue(newModel);
       mockCrudDomainLogic.create.mockReturnValueOnce({ isPermitted: true });
       const res = await request(app).post('/api/create').send({ model: newModel });
       expect(res.status).toBe(200);
@@ -101,7 +97,7 @@ describe('CRUD Service', () => {
     });
 
     it('should return 409 on validation error', async () => {
-      Model.joiValidate = jest.fn().mockReturnValue({ error: 'Validation error' });
+      mockModel.joiValidate.mockReturnValueOnce({ error: 'Validation error' });
       mockCrudDomainLogic.update.mockReturnValueOnce({ isPermitted: true });
       const res = await request(app).put('/api').send({ model: {} });
       expect(res.status).toBe(409);
@@ -109,8 +105,8 @@ describe('CRUD Service', () => {
 
     it('should return updated model if permitted and valid', async () => {
       const updatedModel = { name: 'test' };
-      Model.joiValidate = jest.fn().mockReturnValue({ error: null });
-      Model.findOneAndUpdate = jest.fn().mockResolvedValue(updatedModel);
+      mockModel.joiValidate.mockReturnValueOnce({ error: null });
+      mockModel.findOneAndUpdate.mockResolvedValueOnce(updatedModel);
       mockCrudDomainLogic.update.mockReturnValueOnce({ isPermitted: true });
       const res = await request(app).put('/api').send({ model: updatedModel });
       expect(res.status).toBe(200);
@@ -127,7 +123,7 @@ describe('CRUD Service', () => {
 
     it('should return 200 if permitted', async () => {
       mockCrudDomainLogic.del.mockReturnValueOnce({ isPermitted: true });
-      Model.deleteOne = jest.fn().mockResolvedValue({});
+      mockModel.deleteOne.mockResolvedValueOnce({});
       const res = await request(app).delete('/api/123');
       expect(res.status).toBe(200);
     });
@@ -143,7 +139,7 @@ describe('CRUD Service', () => {
     it('should return search results if permitted', async () => {
       const results = [{ name: 'test' }];
       mockCrudDomainLogic.search.mockReturnValueOnce({ isPermitted: true, criteria: {} });
-      Model.find = jest.fn().mockResolvedValue(results);
+      mockModel.find.mockResolvedValueOnce(results);
       const res = await request(app).post('/api/search').send({ query: {} });
       expect(res.status).toBe(200);
       expect(res.body).toEqual(results);
