@@ -1,4 +1,4 @@
-var TwitterStrategy = require("passport-twitter");
+import { Strategy as TwitterStrategy } from "passport-twitter";
 
 const twitter = ({
   passport,

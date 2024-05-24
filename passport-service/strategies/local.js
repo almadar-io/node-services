@@ -1,4 +1,4 @@
-var LocalStrategy = require("passport-local");
+import { Strategy as LocalStrategy } from "passport-local";
 
 const local = ({ passport, onVerify }) => {
   passport.use(

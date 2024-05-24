@@ -1,4 +1,4 @@
-var GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+import { Strategy as GoogleStrategy } from "passport-google-oauth";
 
 const google = ({
   passport,

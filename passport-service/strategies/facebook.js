@@ -1,4 +1,4 @@
-var FacebookStrategy = require("passport-facebook");
+import FacebookStrategy from "passport-facebook";
 
 const twitter = ({
   passport,
