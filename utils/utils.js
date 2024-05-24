@@ -5,9 +5,9 @@ export const executeDomain = (req, res, domainFn) => {
   //returns criteria
   let user = req.decoded;
   if (!user) {
-    console.error(
-      `${req.url} User doesn't exist in domain execute function make sure you have jwt protected routes and try again.`
-    );
+    // console.warn(
+    //   `${req.url} User doesn't exist in domain execute function make sure you have jwt protected routes and try again.`
+    // );
   }
   return domainFn(user, req, res);
 };
