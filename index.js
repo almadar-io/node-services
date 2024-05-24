@@ -33,4 +33,3 @@ export {
   notificationService,
   settingsService
 };
-
