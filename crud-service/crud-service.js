@@ -39,7 +39,7 @@ const crudService = function ({
     }
   });
 
-  apiRoutes.get("/paginate/:page/:limit", async (req, res) => {
+    apiRoutes.get("/paginate/:page/:limit", async (req, res) => {
     try {
       const { criteria, isPermitted, populate, onResponse, exclude } =
         executeDomain(req, res, read);
@@ -67,6 +67,7 @@ const crudService = function ({
         res.status(200).send({ data: data.docs, count });
       }
     } catch (err) {
+      console.error(`Error occurred in GET /api/paginate/:page/:limit: ${err.message}`);
       res
         .status(500)
         .send({ message: `Database connection error: ${err.message}` });
@@ -81,6 +82,7 @@ const crudService = function ({
       if (Model.joiValidate) {
         const { error } = Model.joiValidate(newModel);
         if (error) {
+          console.error(`Error validating your input ${error}`);
           return res.status(409).send({
             message: `Error validating your input ${error}`,
           });
@@ -88,6 +90,7 @@ const crudService = function ({
       }
 
       if (!isPermitted) {
+        console.error(`You are not authorized to create this ${Model.modelName}`);
         return res.status(409).send({
           message: `You are not authorized to create this ${Model.modelName}`,
         });
@@ -101,6 +104,7 @@ const crudService = function ({
         res.status(200).send(newModel);
       }
     } catch (err) {
+      console.error(`Error occurred in POST /api/create: ${err.message}`);
       res
         .status(500)
         .send({ message: `Database connection error: ${err.message}` });
@@ -124,6 +128,7 @@ const crudService = function ({
 
       if (Model.joiValidate) {
         const { error } = Model.joiValidate(newModel);
+        console.error(`Error validating your input ${error}`);
         if (error) {
           return res.status(409).send({
             message: `Error validating your input ${error}`,
@@ -143,6 +148,7 @@ const crudService = function ({
         res.status(200).send(updatedModel);
       }
     } catch (err) {
+      console.error(`Error occurred in PUT /api: ${err.message}`);
       res
         .status(500)
         .send({ message: `Database connection error: ${err.message}` });
@@ -154,6 +160,7 @@ const crudService = function ({
       const requestModelID = req.params._id;
       const { criteria, isPermitted } = executeDomain(req, res, del);
       if (!isPermitted) {
+        console.error(`You are not authorized to delete this ${Model.modelName}`);
         return res.status(409).send({
           message: `You are not authorized to delete this ${Model.modelName}`,
         });
@@ -161,6 +168,7 @@ const crudService = function ({
       await Model.deleteOne({ _id: requestModelID, ...criteria }).exec();
       res.status(200).send();
     } catch (err) {
+      console.error(`Error occurred in DELETE /api/:_id: ${err.message}`);
       res
         .status(500)
         .send({ message: `Database connection error: ${err.message}` });
@@ -176,6 +184,7 @@ const crudService = function ({
         search
       );
       if (!isPermitted) {
+        console.error(`You are not authorized to search ${Model.modelName}s`);
         return res.status(409).send({
           message: `You are not authorized to search ${Model.modelName}s`,
         });
@@ -187,6 +196,7 @@ const crudService = function ({
         res.status(200).send(results);
       }
     } catch (err) {
+      console.error(`Error occurred in POST /api/search: ${err.message}`);
       res
         .status(500)
         .send({ message: `Database connection error: ${err.message}` });
