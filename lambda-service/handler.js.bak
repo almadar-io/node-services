@@ -8,8 +8,8 @@ export const getHandler = (modelname, path) => {
   import express from 'express';
   const ${modelname}Api = require("./index.js");
   const app = express()
-  import model from './${modelname}';
-  import permissionsSchema from './permissions';
+  import model from './${modelname}.js';
+  import permissionsSchema from './permissions.js';
   import formsSchema from './forms.js';
   let handler;
   exports.handler = async function(event, context) {
