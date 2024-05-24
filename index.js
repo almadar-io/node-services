@@ -1,19 +1,19 @@
-const crudService = require("./crud-service/crud-service");
-const eventService = require("./event-service/event-service");
-const socketService = require("./socket-service/socket-service");
-const mediaService = require("./media-service/media-service");
-const formsService = require("./forms-service/forms-service");
-const aclService = require("./acl-service/acl-service");
-const helloService = require("./hello-service/hello-service");
-const settingsService = require("./settings-service/settings-service");
-const i18nService = require("./i18n-service/i18n-service");
-const jobService = require("./job-service/job-service");
-const jwtService = require("./jwt-service/jwt-service");
-const lambdaService = require("./lambda-service/lambda-service");
-const passportService = require("./passport-service/passport-service");
-const notificationService = require("./notification-service/notification-service");
-const vizService = require("./viz-service/viz-service");
-const emailService = require("./email-service/email-service");
+import crudService from './crud-service/crud-service.js';
+import eventService from './event-service/event-service.js';
+import socketService from './socket-service/socket-service.js';
+import mediaService from './media-service/media-service.js';
+import formsService from './forms-service/forms-service.js';
+import aclService from './acl-service/acl-service.js';
+import helloService from './hello-service/hello-service.js';
+import settingsService from './settings-service/settings-service.js';
+import i18nService from './i18n-service/i18n-service.js';
+import jobService from './job-service/job-service.js';
+import jwtService from './jwt-service/jwt-service.js';
+import lambdaService from './lambda-service/lambda-service.js';
+import passportService from './passport-service/passport-service.js';
+import notificationService from './notification-service/notification-service.js';
+import vizService from './viz-service/viz-service.js';
+import emailService from './email-service/email-service.js';
 
 export {
   crudService,

@@ -1,6 +1,6 @@
-const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
-const express = require("express");
-const nodemailer = require("nodemailer");
+import {  SESClient, SendEmailCommand  } from '@aws-sdk/client-ses';
+import express from 'express';
+import nodemailer from 'nodemailer';
 const apiRoutes = express.Router();
 
 // Initialize the SES client

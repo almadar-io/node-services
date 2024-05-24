@@ -1,5 +1,5 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
+import express from 'express';
+import jwt from 'jsonwebtoken';
 var apiRoutes = express.Router();
 
 export const isAuthenticated = (token, secret) => {

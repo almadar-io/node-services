@@ -1,16 +1,16 @@
 export const getHandler = (modelname, path) => {
   return `
-  const mongoose = require("mongoose");
-  const config = require("config");
+  import mongoose from 'mongoose';
+  import config from 'config';
   let conn = null;
   const uri = config.get("db.host");
-  const serverless = require("serverless-http");
-  const express = require("express");
+  import serverless from 'serverless-http';
+  import express from 'express';
   const ${modelname}Api = require("./index.js");
   const app = express()
-  const model = require("./${modelname}");
-  const permissionsSchema = require("./permissions");
-  const formsSchema = require("./forms.js");
+  import model from './${modelname}.js';
+  import permissionsSchema from './permissions.js';
+  import formsSchema from './forms.js';
   let handler;
   exports.handler = async function(event, context) {
     // Make sure to add this so you can re-use "conn" between function calls.

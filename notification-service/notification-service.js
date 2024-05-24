@@ -1,6 +1,6 @@
-const { SNSClient, PublishCommand, SubscribeCommand } = require("@aws-sdk/client-sns");
-const express = require("express");
-const socketService = require("../socket-service/socket-service");
+import {  SNSClient, PublishCommand, SubscribeCommand  } from '@aws-sdk/client-sns';
+import express from 'express';
+import socketService from '../socket-service/socket-service.js';
 
 // Initialize the SNS client
 const snsClient = new SNSClient({ region: "us-east-1" });

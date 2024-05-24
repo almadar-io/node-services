@@ -1,4 +1,4 @@
-const { capitalize } = require("../utils/utils.js");
+import {  capitalize  } from '../utils/utils.js';
 export const registerLambdaFunction = function registerLambdaFunction({
   modelname,
   path,

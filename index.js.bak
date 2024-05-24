@@ -1,19 +1,19 @@
-const crudService = require("./crud-service/crud-service");
-const eventService = require("./event-service/event-service");
-const socketService = require("./socket-service/socket-service");
-const mediaService = require("./media-service/media-service");
-const formsService = require("./forms-service/forms-service");
-const aclService = require("./acl-service/acl-service");
-const helloService = require("./hello-service/hello-service");
-const settingsService = require("./settings-service/settings-service");
-const i18nService = require("./i18n-service/i18n-service");
-const jobService = require("./job-service/job-service");
-const jwtService = require("./jwt-service/jwt-service");
-const lambdaService = require("./lambda-service/lambda-service");
-const passportService = require("./passport-service/passport-service");
-const notificationService = require("./notification-service/notification-service");
-const vizService = require("./viz-service/viz-service");
-const emailService = require("./email-service/email-service");
+import crudService from './crud-service/crud-service';
+import eventService from './event-service/event-service';
+import socketService from './socket-service/socket-service';
+import mediaService from './media-service/media-service';
+import formsService from './forms-service/forms-service';
+import aclService from './acl-service/acl-service';
+import helloService from './hello-service/hello-service';
+import settingsService from './settings-service/settings-service';
+import i18nService from './i18n-service/i18n-service';
+import jobService from './job-service/job-service';
+import jwtService from './jwt-service/jwt-service';
+import lambdaService from './lambda-service/lambda-service';
+import passportService from './passport-service/passport-service';
+import notificationService from './notification-service/notification-service';
+import vizService from './viz-service/viz-service';
+import emailService from './email-service/email-service';
 
 export {
   crudService,

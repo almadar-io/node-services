@@ -1,5 +1,5 @@
-const express = require("express");
-const { executeDomain } = require("../utils/utils");
+import express from 'express';
+import {  executeDomain  } from '../utils/utils.js';
 
 export const settingsService = function settingsService({
   Model,

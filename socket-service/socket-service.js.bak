@@ -1,5 +1,5 @@
-const io = require("socket.io");
-const express = require("express");
+import io from 'socket.io';
+import express from 'express';
 // ---------------------------------------------------------
 // get an instance of the router for api routes
 // ---------------------------------------------------------
