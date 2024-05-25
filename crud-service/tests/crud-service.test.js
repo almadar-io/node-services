@@ -20,20 +20,22 @@ const mockPopulate = jest.fn().mockReturnValue({ select: mockSelect });
 const mockSort = jest.fn().mockReturnValue({ populate: mockPopulate });
 const mockFind = jest.fn().mockReturnValue({ sort: mockSort });
 
-const mockModel = {
-  find: mockFind,
-  paginate: jest.fn(),
-  joiValidate: jest.fn(),
-  prototype: {
-    save: jest.fn(),
-  },
-  findOneAndUpdate: jest.fn(),
-  deleteOne: jest.fn(),
-  countDocuments: jest.fn(),
-};
+class MockModel {
+  constructor(data) {
+    Object.assign(this, data);
+  }
+
+  save = jest.fn().mockResolvedValue(this);
+  static find = mockFind;
+  static paginate = jest.fn();
+  static countDocuments = jest.fn().mockReturnValue({ exec: mockExec });
+  static joiValidate = jest.fn();
+  static findOneAndUpdate = jest.fn();
+  static deleteOne = jest.fn();
+}
 
 const apiRoutes = crudService({
-  Model: mockModel,
+  Model: MockModel,
   crudDomainLogic: mockCrudDomainLogic,
 });
 
@@ -42,7 +44,7 @@ app.use('/api', apiRoutes);
 describe('CRUD Service', () => {
   describe('GET /', () => {
     it('should return 409 if not permitted', async () => {
-      mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: false });
+      mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: false, criteria: {} });
       const res = await request(app).get('/api');
       expect(res.status).toBe(409);
     });
@@ -60,7 +62,7 @@ describe('CRUD Service', () => {
 
   describe('GET /paginate/:page/:limit', () => {
     it('should return 409 if not permitted', async () => {
-      mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: false });
+      mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: false, criteria: {} });
       const res = await request(app).get('/api/paginate/1/10');
       expect(res.status).toBe(409);
     });
@@ -68,7 +70,8 @@ describe('CRUD Service', () => {
     it('should return paginated data if permitted', async () => {
       const data = { docs: [{ name: 'test' }], totalDocs: 1 };
       mockCrudDomainLogic.read.mockReturnValueOnce({ isPermitted: true, criteria: {} });
-      mockModel.paginate.mockResolvedValueOnce(data);
+      mockExec.mockResolvedValueOnce(1);  // Mock countDocuments exec return value
+      MockModel.paginate.mockResolvedValueOnce(data);
 
       const res = await request(app).get('/api/paginate/1/10');
       expect(res.status).toBe(200);
@@ -84,7 +87,7 @@ describe('CRUD Service', () => {
     });
 
     it('should return 409 on validation error', async () => {
-      mockModel.joiValidate.mockReturnValueOnce({ error: 'Validation error' });
+      MockModel.joiValidate.mockReturnValueOnce({ error: 'Validation error' });
       mockCrudDomainLogic.create.mockReturnValueOnce({ isPermitted: true });
       const res = await request(app).post('/api/create').send({ model: {} });
       expect(res.status).toBe(409);
@@ -92,8 +95,7 @@ describe('CRUD Service', () => {
 
     it('should return new model if permitted and valid', async () => {
       const newModel = { name: 'test' };
-      mockModel.joiValidate.mockReturnValueOnce({ error: null });
-      mockModel.prototype.save.mockResolvedValueOnce(newModel);
+      MockModel.joiValidate.mockReturnValueOnce({ error: null });
       mockCrudDomainLogic.create.mockReturnValueOnce({ isPermitted: true });
       const res = await request(app).post('/api/create').send({ model: newModel });
       expect(res.status).toBe(200);
@@ -109,7 +111,7 @@ describe('CRUD Service', () => {
     });
 
     it('should return 409 on validation error', async () => {
-      mockModel.joiValidate.mockReturnValueOnce({ error: 'Validation error' });
+      MockModel.joiValidate.mockReturnValueOnce({ error: 'Validation error' });
       mockCrudDomainLogic.update.mockReturnValueOnce({ isPermitted: true });
       const res = await request(app).put('/api').send({ model: {} });
       expect(res.status).toBe(409);
@@ -117,8 +119,8 @@ describe('CRUD Service', () => {
 
     it('should return updated model if permitted and valid', async () => {
       const updatedModel = { name: 'test' };
-      mockModel.joiValidate.mockReturnValueOnce({ error: null });
-      mockModel.findOneAndUpdate.mockResolvedValueOnce(updatedModel);
+      MockModel.joiValidate.mockReturnValueOnce({ error: null });
+      MockModel.findOneAndUpdate.mockResolvedValueOnce(updatedModel);
       mockCrudDomainLogic.update.mockReturnValueOnce({ isPermitted: true });
       const res = await request(app).put('/api').send({ model: updatedModel });
       expect(res.status).toBe(200);
@@ -135,7 +137,7 @@ describe('CRUD Service', () => {
 
     it('should return 200 if permitted', async () => {
       mockCrudDomainLogic.del.mockReturnValueOnce({ isPermitted: true });
-      mockModel.deleteOne.mockResolvedValueOnce({});
+      MockModel.deleteOne.mockResolvedValueOnce({});
       const res = await request(app).delete('/api/123');
       expect(res.status).toBe(200);
     });
