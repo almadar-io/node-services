@@ -101,16 +101,18 @@ const crudService = function ({
         });
       }
 
-      await newModel.save();
+      const outputModel = await newModel.save();
 
       if (onResponse) {
-        onResponse(newModel, req, res);
+        onResponse(outputModel, req, res);
       } else {
-        res.status(200).send(newModel);
+        res.status(200).send(outputModel);
       }
     } catch (err) {
       console.error(`Error occurred in POST /api/create: ${err.message}`);
-      res.status(500).send({ message: `Database connection error: ${err.message}` });
+      res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
@@ -122,7 +124,9 @@ const crudService = function ({
         update
       );
       if (!isPermitted) {
-        console.warn(`You are not authorized to update this ${Model.modelName}`);
+        console.warn(
+          `You are not authorized to update this ${Model.modelName}`
+        );
         return res.status(409).send({
           message: `You are not authorized to update this ${Model.modelName}`,
         });
