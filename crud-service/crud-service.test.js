@@ -19,6 +19,7 @@ const mockSelect = jest.fn().mockReturnValue({ exec: mockExec });
 const mockPopulate = jest.fn().mockReturnValue({ select: mockSelect });
 const mockSort = jest.fn().mockReturnValue({ populate: mockPopulate });
 const mockFind = jest.fn().mockReturnValue({ sort: mockSort });
+const mockFindOneAndUpdate = jest.fn().mockReturnValue({ exec: mockExec });
 
 class MockModel {
   constructor(data) {
@@ -30,7 +31,7 @@ class MockModel {
   static paginate = jest.fn();
   static countDocuments = jest.fn().mockReturnValue({ exec: mockExec });
   static joiValidate = jest.fn();
-  static findOneAndUpdate = jest.fn();
+  static findOneAndUpdate = mockFindOneAndUpdate;
   static deleteOne = jest.fn();
 }
 
@@ -140,8 +141,11 @@ describe("CRUD Service", () => {
     it("should return updated model if permitted and valid", async () => {
       const updatedModel = { name: "test" };
       MockModel.joiValidate.mockReturnValueOnce({ error: null });
-      MockModel.findOneAndUpdate.mockResolvedValueOnce(updatedModel);
       mockCrudDomainLogic.update.mockReturnValueOnce({ isPermitted: true });
+      mockFindOneAndUpdate.mockReturnValueOnce({
+        exec: jest.fn().mockResolvedValue(updatedModel),
+      });
+
       const res = await request(app).put("/api").send({ model: updatedModel });
       expect(res.status).toBe(200);
       expect(res.body).toEqual(updatedModel);
