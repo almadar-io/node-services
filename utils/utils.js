@@ -1,16 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 
-export const executeDomain = (req, res, domainFn) => {
-  //returns criteria
-  let user = req.decoded;
-  if (!user) {
-    console.error(
-      `${req.url} User doesn't exist in domain execute function make sure you have jwt protected routes and try again.`
-    );
-  }
-  return domainFn(user, req, res);
-};
+export const executeDomain = (req, res, domainLogic) => {
+  const result = domainLogic(req, res);
+  return {
+    criteria: result.criteria || {},
+    isPermitted: result.isPermitted || false,
+    populate: result.populate || '',
+    onResponse: result.onResponse || null,
+    exclude: result.exclude || [],
+  };
+}
 
 export const parseNumberQuery = obj => {
   Object.keys(obj).map(key => {

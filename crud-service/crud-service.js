@@ -1,5 +1,5 @@
-import express from 'express';
-import {  executeDomain  } from '../utils/utils.js';
+import express from "express";
+import { executeDomain } from "../utils/utils.js";
 
 const crudService = function ({
   Model,
@@ -17,7 +17,9 @@ const crudService = function ({
           message: `You are not authorized to read ${Model.modelName}s`,
         });
       }
-      const exclusionList = exclude ? exclude.map((ex) => `-${ex}`).join(" ") : "";
+      const exclusionList = exclude
+        ? exclude.map((ex) => `-${ex}`).join(" ")
+        : "";
       const data = await Model.find(query)
         .sort("-createdAt")
         .populate(Array.isArray(populate) ? populate.join(" ") : "")
@@ -30,7 +32,10 @@ const crudService = function ({
         res.status(200).send({ data, count: data.length });
       }
     } catch (err) {
-      res.status(500).send({ message: `Database connection error: ${err.message}` });
+      console.error(`Error occurred in GET /api: ${err.message}`);
+      res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
@@ -45,7 +50,9 @@ const crudService = function ({
           message: `You are not authorized to read ${Model.modelName}s`,
         });
       }
-      const exclusionList = exclude ? exclude.map((ex) => `-${ex}`).join(" ") : "";
+      const exclusionList = exclude
+        ? exclude.map((ex) => `-${ex}`).join(" ")
+        : "";
       const count = await Model.countDocuments(query).exec();
       const data = await Model.paginate(query, {
         page: parseInt(page),
@@ -60,7 +67,12 @@ const crudService = function ({
         res.status(200).send({ data: data.docs, count });
       }
     } catch (err) {
-      res.status(500).send({ message: `Database connection error: ${err.message}` });
+      console.error(
+        `Error occurred in GET /api/paginate/:page/:limit: ${err.message}`
+      );
+      res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
@@ -70,15 +82,20 @@ const crudService = function ({
       const newModel = new Model(req.body.model);
 
       if (Model.joiValidate) {
-        const { error } = Model.joiValidate(newModel);
+        const validation = Model.joiValidate(newModel) || {};
+        const { error } = validation;
         if (error) {
+          console.warn(`Error validating your input: ${error}`);
           return res.status(409).send({
-            message: `Error validating your input ${error}`,
+            message: `Error validating your input: ${error}`,
           });
         }
       }
 
       if (!isPermitted) {
+        console.warn(
+          `You are not authorized to create this ${Model.modelName}`
+        );
         return res.status(409).send({
           message: `You are not authorized to create this ${Model.modelName}`,
         });
@@ -92,14 +109,20 @@ const crudService = function ({
         res.status(200).send(newModel);
       }
     } catch (err) {
+      console.error(`Error occurred in POST /api/create: ${err.message}`);
       res.status(500).send({ message: `Database connection error: ${err.message}` });
     }
   });
 
   apiRoutes.put("/", async (req, res) => {
     try {
-      const { criteria, isPermitted, onResponse } = executeDomain(req, res, update);
+      const { criteria, isPermitted, onResponse } = executeDomain(
+        req,
+        res,
+        update
+      );
       if (!isPermitted) {
+        console.warn(`You are not authorized to update this ${Model.modelName}`);
         return res.status(409).send({
           message: `You are not authorized to update this ${Model.modelName}`,
         });
@@ -110,6 +133,7 @@ const crudService = function ({
       if (Model.joiValidate) {
         const { error } = Model.joiValidate(newModel);
         if (error) {
+          console.warn(`Error validating your input ${error}`);
           return res.status(409).send({
             message: `Error validating your input ${error}`,
           });
@@ -128,7 +152,10 @@ const crudService = function ({
         res.status(200).send(updatedModel);
       }
     } catch (err) {
-      res.status(500).send({ message: `Database connection error: ${err.message}` });
+      console.error(`Error occurred in PUT /api: ${err.message}`);
+      res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
@@ -137,6 +164,9 @@ const crudService = function ({
       const requestModelID = req.params._id;
       const { criteria, isPermitted } = executeDomain(req, res, del);
       if (!isPermitted) {
+        console.warn(
+          `You are not authorized to delete this ${Model.modelName}`
+        );
         return res.status(409).send({
           message: `You are not authorized to delete this ${Model.modelName}`,
         });
@@ -144,15 +174,23 @@ const crudService = function ({
       await Model.deleteOne({ _id: requestModelID, ...criteria }).exec();
       res.status(200).send();
     } catch (err) {
-      res.status(500).send({ message: `Database connection error: ${err.message}` });
+      console.error(`Error occurred in DELETE /api/:_id: ${err.message}`);
+      res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
   apiRoutes.post("/search", async (req, res) => {
     try {
       const query = req.body.query;
-      const { criteria, isPermitted, onResponse } = executeDomain(req, res, search);
+      const { criteria, isPermitted, onResponse } = executeDomain(
+        req,
+        res,
+        search
+      );
       if (!isPermitted) {
+        console.warn(`You are not authorized to search ${Model.modelName}s`);
         return res.status(409).send({
           message: `You are not authorized to search ${Model.modelName}s`,
         });
@@ -164,7 +202,10 @@ const crudService = function ({
         res.status(200).send(results);
       }
     } catch (err) {
-      res.status(500).send({ message: `Database connection error: ${err.message}` });
+      console.error(`Error occurred in POST /api/search: ${err.message}`);
+      res
+        .status(500)
+        .send({ message: `Database connection error: ${err.message}` });
     }
   });
 
