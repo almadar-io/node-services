@@ -20,6 +20,7 @@ const mockPopulate = jest.fn().mockReturnValue({ select: mockSelect });
 const mockSort = jest.fn().mockReturnValue({ populate: mockPopulate });
 const mockFind = jest.fn().mockReturnValue({ sort: mockSort });
 const mockFindOneAndUpdate = jest.fn().mockReturnValue({ exec: mockExec });
+const mockDeleteOne = jest.fn().mockReturnValue({ exec: mockExec });
 
 class MockModel {
   constructor(data) {
@@ -32,7 +33,7 @@ class MockModel {
   static countDocuments = jest.fn().mockReturnValue({ exec: mockExec });
   static joiValidate = jest.fn();
   static findOneAndUpdate = mockFindOneAndUpdate;
-  static deleteOne = jest.fn();
+  static deleteOne = mockDeleteOne;
 }
 
 const apiRoutes = crudService({
@@ -161,7 +162,10 @@ describe("CRUD Service", () => {
 
     it("should return 200 if permitted", async () => {
       mockCrudDomainLogic.del.mockReturnValueOnce({ isPermitted: true });
-      MockModel.deleteOne.mockResolvedValueOnce({});
+      mockDeleteOne.mockReturnValueOnce({
+        exec: jest.fn().mockResolvedValue({}),
+      });
+
       const res = await request(app).delete("/api/123");
       expect(res.status).toBe(200);
     });
@@ -180,7 +184,9 @@ describe("CRUD Service", () => {
         isPermitted: true,
         criteria: {},
       });
-      mockExec.mockResolvedValueOnce(results);
+      mockFind.mockReturnValueOnce({
+        exec: jest.fn().mockResolvedValue(results),
+      });
 
       const res = await request(app).post("/api/search").send({ query: {} });
       expect(res.status).toBe(200);
