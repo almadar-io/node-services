@@ -1,0 +1,55 @@
+{
+  "name": "@markab.io/node",
+  "version": "13.0.2",
+  "description": "A way to get up and running quickly with any programming task.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markab-io/node-services.git"
+  },
+  "author": "sam alghanmi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markab-io/node-services/issues"
+  },
+  "homepage": "https://github.com/markab-io/node-services#readme",
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.583.0",
+    "@aws-sdk/client-sns": "^3.583.0",
+    "amazon-cognito-identity-js": "^6.3.12",
+    "config": "^3.3.11",
+    "dotenv": "^16.4.5",
+    "express": "^4.14.1",
+    "i18next": "^23.11.5",
+    "i18next-express-middleware": "^2.0.0",
+    "i18next-node-fs-backend": "^2.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.13",
+    "passport": "^0.7.0",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth": "^2.0.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "passport-oauth": "^1.0.0",
+    "passport-twitter": "^1.0.4",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.5",
+    "@babel/preset-env": "^7.24.5",
+    "axios": "^1.7.2",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "keywords": [
+    "nodejs-services"
+  ]
+}
